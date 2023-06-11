@@ -1,11 +1,13 @@
-import { NextApiRequest } from 'next';
-import { getServerSession } from 'next-auth/next';
-import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import {
+  NextRequest,
+  NextResponse,
+} from 'next/server';
 
 // pages/api/users.ts
 import prisma from '@/libs/prisma';
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
 	if (!req.url) {
 		return NextResponse.json({
 			message: "No URL provided."
@@ -13,7 +15,8 @@ export async function GET(req: NextApiRequest) {
 			status: 400,
 		})
 	}
-	const session = await getServerSession(req);
+	const session = await getToken({ req });
+	console.log(session);
 	const { searchParams } = new URL(req.url);
 	const searchQuery = searchParams.get('searchQuery') || '';
 	try {
@@ -24,7 +27,7 @@ export async function GET(req: NextApiRequest) {
 					mode: "insensitive", // Perform case-insensitive search
 				},
 				id: {
-					not: session?.user?.id
+					not: session?.id
 				}
 			},
 			take: 10, // Limit the number of results to 10

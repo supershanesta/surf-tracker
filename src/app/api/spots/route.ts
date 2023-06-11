@@ -1,11 +1,13 @@
-import { NextApiRequest } from 'next';
-import { NextResponse } from 'next/server';
+import {
+  NextRequest,
+  NextResponse,
+} from 'next/server';
 
 // pages/api/spots.ts
 import prisma from '@/libs/prisma';
 import { TaxonomyType } from '@/services/surfLine/controllers/types';
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
 	if (!req.url) {
 		return NextResponse.json({
 			message: "No URL provided."
