@@ -59,11 +59,6 @@ export async function GET(req: NextRequest) {
             userId: userId,
           },
         },
-        SurfRating: {
-          some: {
-            userId: userId,
-          },
-        },
       },
       select: {
         date: true,
@@ -74,6 +69,7 @@ export async function GET(req: NextRequest) {
         },
         SurfRating: {
           select: {
+            userId: true,
             rating: true,
             size: true,
             shape: true,
@@ -87,7 +83,8 @@ export async function GET(req: NextRequest) {
         let rating = 0;
         let size = 0;
         let shape = 0;
-      if (surfExperience.SurfRating.length > 0) {
+      const myRating = surfExperience.SurfRating.find((rating) => rating.userId === userId);
+      if (myRating) {
         rating = surfExperience.SurfRating[0].rating;
         size = surfExperience.SurfRating[0].size;
         shape = surfExperience.SurfRating[0].shape;
