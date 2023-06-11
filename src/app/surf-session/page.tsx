@@ -92,12 +92,8 @@ const SurfExperiences: React.FC = () => {
 
 	return (
 		<div>
-			<div>
-				<h1>Surf Experiences</h1>
-			</div>
-
-			<div id="filters" className="flex gap-2 pt-12">
-				<div>
+			<Grid.Container id="filters" gap={2}>
+				<Grid xs={6} md={6}>
 					<Input
 						labelPlaceholder="Start Date"
 						type="date"
@@ -105,8 +101,8 @@ const SurfExperiences: React.FC = () => {
 						value={startDate}
 						onChange={handleFilterStartDateChange}
 					/>
-				</div>
-				<div>
+				</Grid>
+				<Grid xs={6} md={6}>
 					<Input
 						labelPlaceholder="End Date"
 						type="date"
@@ -114,9 +110,9 @@ const SurfExperiences: React.FC = () => {
 						value={endDate}
 						onChange={handleFilterEndDateChange}
 					/>
-				</div>
+				</Grid>
 
-				<div>
+				<Grid xs={6} md={6}>
 					<Input
 						type="number"
 						labelPlaceholder="Rating"
@@ -126,10 +122,13 @@ const SurfExperiences: React.FC = () => {
 						value={filterRating}
 						onChange={handleFilterRatingChange}
 					/>
-				</div>
-
-				<Button onClick={handleFilterReset}>Reset Filters</Button>
-			</div>
+				</Grid>
+				<Grid xs={6} md={6}>
+					<Button size="sm" onClick={handleFilterReset}>
+						Reset Filters
+					</Button>
+				</Grid>
+			</Grid.Container>
 			<Grid.Container gap={2} justify="center">
 				<Grid xs={12} md={12}>
 					<MyActivityCharts

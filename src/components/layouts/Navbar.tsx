@@ -48,7 +48,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ title }) => {
 			<Navbar.Content
 				enableCursorHighlight
 				activeColor="secondary"
-				hideIn="xs"
 				variant="underline"
 			>
 				{navigationItems.map((item, index) => (

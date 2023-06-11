@@ -9,7 +9,7 @@ const AddSurfPage: React.FC = () => {
 	const handleSubmit = async (values: SubmitValues) => {
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_URL}/surf-activity`,
+				`${process.env.NEXT_PUBLIC_URL}api/surf-activity`,
 				{
 					method: "POST",
 					headers: {
