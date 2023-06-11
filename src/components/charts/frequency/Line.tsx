@@ -50,7 +50,7 @@ const FrequencyLineChart: React.FC<ChartProps> = ({ data, filters }) => {
 				chartInstance.current.dispose();
 			}
 		};
-	}, [data, filters.endDate, filters.startDate]);
+	}, [data, filters.endDate, filters.startDate, parsedData]);
 
 	return <div ref={chartRef} style={{ height: "300px" }} />;
 };
