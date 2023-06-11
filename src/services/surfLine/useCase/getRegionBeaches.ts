@@ -115,17 +115,30 @@ const getSpots = async (region: string | undefined): Promise<Taxonomy[]> => {
 
 
 const getSurfReports = async () => {
+  const regionArg = process.argv[2]; // Get the command-line argument for region
 
-  const id = SurfLineController.taxonomy.regions.Mexico;
-  const spots = await getSpots(id);
+  let regionId;
+  switch (regionArg) {
+    case 'Earth':
+      regionId = SurfLineController.taxonomy.regions.Earth;
+      break;
+    case 'NorthAmerica':
+      regionId = SurfLineController.taxonomy.regions.NorthAmerica;
+      break;
+    case 'Mexico':
+      regionId = SurfLineController.taxonomy.regions.Mexico;
+      break;
+    case 'UnitedStates':
+      regionId = SurfLineController.taxonomy.regions.UnitedStates;
+      break;
+    default:
+      regionId = SurfLineController.taxonomy.regions.NorthAmerica;
+  }
+
+  const spots = await getSpots(regionId);
   await persistSpots(spots);
-
-
-  console.log('Spots: ', spots.length)
-
-  
-  return spots;
-}
+  console.log('Spots:', spots.length);
+};
 
 getSurfReports();
 
