@@ -61,7 +61,7 @@ const SurfExperiences: React.FC = () => {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					`http://localhost:3000/api/surf-activity/stats?startDate=${startDate}&endDate=${endDate}`
+					`${process.env.NEXT_PUBLIC_URL}/api/surf-activity/stats?startDate=${startDate}&endDate=${endDate}`
 				);
 				const responseData = await response.json();
 				setData(responseData);

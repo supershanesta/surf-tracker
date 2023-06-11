@@ -8,13 +8,16 @@ const AddSurfPage: React.FC = () => {
 	const router = useRouter();
 	const handleSubmit = async (values: SubmitValues) => {
 		try {
-			const response = await fetch("/api/surf-activity", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(values),
-			});
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_URL}/surf-activity`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(values),
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error("Failed to create surf activity");
