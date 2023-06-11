@@ -1,12 +1,14 @@
 import * as Bluebird from 'bluebird';
 
-import { Taxonomy } from '../controllers/types';
+import {
+  Geonames,
+  Taxonomy,
+} from '../controllers/types';
 import SurfLineController from '../provider';
 
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
-
 const persistSpot = async (spot: Taxonomy) => {
   try {
     const existingSpot = await prisma.location.findUnique({
@@ -15,14 +17,26 @@ const persistSpot = async (spot: Taxonomy) => {
         type: spot.type
       } },
     });
-
     if (!existingSpot) {
+      const data =  {
+        name: spot.name,
+        type: spot.type,
+        external_spot_id: spot.spot,
+        external_id: spot._id,
+        country: spot?.parent?.countryCode,
+        state:  spot?.parent?.adminCode1,
+        city:  spot?.parent?.name,
+      };
+      console.log(data)
       const createdSpot = await prisma.location.create({
         data: {
           name: spot.name,
           type: spot.type,
           external_spot_id: spot.spot,
           external_id: spot._id,
+          country: spot?.parent?.countryCode,
+          state:  spot?.parent?.adminCode1,
+          city:  spot?.parent?.name,
         },
       });
 
@@ -56,28 +70,42 @@ const getSpots = async (region: string | undefined): Promise<Taxonomy[]> => {
 
   console.log('Getting Spots......');
 
-  const processLocations = async (locations: Taxonomy[]): Promise<void> => {
+  const processLocations = async (locations: Taxonomy[], parent: Geonames | null = null, recursion = 3): Promise<void> => {
     await Bluebird.Promise.map(
       locations,
       async (location: Taxonomy) => {
         console.log('Name: ', location.name);
 
         if (location?.spot) {
-          if (!processedSpots.has(location._id)) {
+          const spot = spots.find(spot => spot._id === location._id);
+          if (!spot) {
             console.log('Pushing: ', location.name);
+            if (parent && parent.fcode === 'PPL') {
+              location.parent = parent;
+            }
+            // 
             spots.push(location);
             processedSpots.add(location._id);
+          } else {
+            // just update the location parent if it's not set in spots
+            
+            if (spot && spot?.parent?.fcode !== 'PPL' && parent) {
+              spot.parent = parent;
+            }
           }
         } else if (!location.hasSpots) {
           console.log('No Spots: ', location.name);
         } else {
           console.log('Getting Sub Locations: ', location.name);
 
-          const subLocations = await SurfLineController.taxonomy.get(location._id);
-          await processLocations(subLocations.contains);
+          const subLocations = await SurfLineController.taxonomy.get(location._id, 1);
+          if (location.name == 'Seybouse' || location.name == 'Las Rosas') {
+            return
+          }
+          await processLocations(subLocations.contains, subLocations.geonames, recursion + 1);
         }
       },
-      { concurrency: 10 } // Specify the concurrency level (e.g., 5 concurrent requests)
+      { concurrency: recursion } // Specify the concurrency level (e.g., 5 concurrent requests)
     );
   };
 
@@ -86,14 +114,9 @@ const getSpots = async (region: string | undefined): Promise<Taxonomy[]> => {
 };
 
 
-const getLocationByName = async (name: string, locations: Taxonomy[]) => {
-  const location = locations.find((location) => location.name === name);
-  return location;
-}
-
 const getSurfReports = async () => {
 
-  const id = SurfLineController.taxonomy.regions.Earth;
+  const id = SurfLineController.taxonomy.regions.Mexico;
   const spots = await getSpots(id);
   await persistSpots(spots);
 

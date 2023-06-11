@@ -18,7 +18,7 @@ interface SurfChartsProps {
 interface SurfExperience {
 	date: string;
 	beach: string;
-	timeOfDay: string;
+	surfShape: number;
 	surfRating: number;
 	surfSize: number;
 }

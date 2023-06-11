@@ -25,12 +25,12 @@ interface navigationItem {
 
 const navigationItems: navigationItem[] = [
 	{
-		name: "Surf",
-		link: "/surf",
+		name: "Tracker",
+		link: "/surf-session",
 	},
 	{
 		name: "New Session",
-		link: "/surf/new",
+		link: "/surf-session/new",
 	},
 ];
 

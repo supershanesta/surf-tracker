@@ -1,9 +1,9 @@
 import { NextApiRequest } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { NextResponse } from 'next/server';
 
-// pages/api/spots.ts
+// pages/api/users.ts
 import prisma from '@/libs/prisma';
-import { TaxonomyType } from '@/services/surfLine/controllers/types';
 
 export async function GET(req: NextApiRequest) {
 	if (!req.url) {
@@ -13,24 +13,27 @@ export async function GET(req: NextApiRequest) {
 			status: 400,
 		})
 	}
+	const session = await getServerSession(req);
 	const { searchParams } = new URL(req.url);
 	const searchQuery = searchParams.get('searchQuery') || '';
 	try {
-		const locations = await prisma.location.findMany({
+		const users = await prisma.user.findMany({
 			where: {
-				name: {
+				firstName: {
 					contains: searchQuery, // Search for names containing the searchQuery
 					mode: "insensitive", // Perform case-insensitive search
 				},
-				type: TaxonomyType.SPOT,
+				id: {
+					not: session?.user?.id
+				}
 			},
 			take: 10, // Limit the number of results to 10
 		});
-		return NextResponse.json({ spots: locations });
+		return NextResponse.json({ users });
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({
-			message: "Error occurred while getting spots"
+			message: "Error occurred while getting users"
 		}, {
 			status: 500,
 		})

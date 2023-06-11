@@ -39,13 +39,12 @@ export const authOptions: NextAuthOptions = {
 		}),
 	],
 	adapter: PrismaAdapter(prisma),
-	secret: process.env.NEXT_SECRECT,
+	secret: process.env.NEXTAUTH_SECRET,
 	session: { strategy: "jwt" },
 	callbacks: {
 		async jwt({ token, user }) {
 			/* Step 1: update the token based on the user object */
 			if (user) {
-				console.log(user)
 				token.admin = user.admin;
 				token.firstName = user.firstName;
 				token.lastName = user.lastName;
@@ -53,14 +52,17 @@ export const authOptions: NextAuthOptions = {
 			}
 			return token;
 		},
-		session({ session, token }) {
-			/* Step 2: update the session.user based on the token object */
-			if (token && session.user) {
-				session.user.admin = token.admin;
-				session.user.firstName = token.firstName;
-				session.user.lastName = token.lastName;
-				session.user.id = token.id;
-			}
+		async session({ session, token }) {
+			session = {
+				...session,
+				user: {
+						...session.user,
+						id: token.id,
+						firstName: token.firstName,
+						lastName: token.lastName,
+						admin: token.admin,
+				},
+			};
 			return session;
 		},
 	},

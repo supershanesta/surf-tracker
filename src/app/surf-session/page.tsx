@@ -1,5 +1,10 @@
 "use client";
-import { useState } from 'react';
+import 'react';
+
+import {
+  useEffect,
+  useState,
+} from 'react';
 
 import {
   format,
@@ -15,6 +20,14 @@ import {
   Input,
 } from '@nextui-org/react';
 
+export interface SurfActivity {
+	date: string;
+	beach: string;
+	surfRating: number;
+	surfSize: number;
+	surfShape: number;
+}
+
 const SurfExperiences: React.FC = () => {
 	const [startDate, setStartDate] = useState(
 		format(subDays(new Date(), 7), "yyyy-MM-dd")
@@ -23,6 +36,7 @@ const SurfExperiences: React.FC = () => {
 	const [filterRating, setFilterRating] = useState<number | undefined>(
 		undefined
 	);
+	const [data, setData] = useState<SurfActivity[]>([]);
 
 	const handleFilterStartDateChange = (e: React.ChangeEvent<FormElement>) => {
 		console.log(e.target.value);
@@ -43,33 +57,26 @@ const SurfExperiences: React.FC = () => {
 		setFilterRating(undefined);
 	};
 
-	// Replace the surfExperiencesData with your actual data source
-	const surfExperiencesData = [
-		{
-			date: "2023-05-12",
-			beach: "Beach A",
-			timeOfDay: "morning",
-			surfRating: 3,
-			surfSize: 2,
-		},
-		{
-			date: "2023-05-13",
-			beach: "Beach B",
-			timeOfDay: "afternoon",
-			surfRating: 4,
-			surfSize: 2,
-		},
-		{
-			date: "2023-05-14",
-			beach: "Beach C",
-			timeOfDay: "morning",
-			surfRating: 2,
-			surfSize: 2,
-		},
-		// Add more surf experience data as needed
-	];
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`http://localhost:3000/api/surf-activity/stats?startDate=${startDate}&endDate=${endDate}`
+				);
+				const responseData = await response.json();
+				setData(responseData);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+		fetchData();
+	}, [startDate, endDate]);
 
-	const filteredSurfExperiences = surfExperiencesData.filter((experience) => {
+	console.log("data", data);
+	if (!data) {
+		return <div>Loading...</div>;
+	}
+	const filteredSurfExperiences = data.filter((experience) => {
 		//if (filterDate && experience.date !== filterDate) {
 		//	return false;
 		//}
@@ -126,12 +133,12 @@ const SurfExperiences: React.FC = () => {
 			<Grid.Container gap={2} justify="center">
 				<Grid xs={12} md={12}>
 					<MyActivityCharts
-						surfExperiencesData={surfExperiencesData}
+						surfExperiencesData={filteredSurfExperiences}
 						filters={{ startDate, endDate, rating: filterRating }}
 					/>
 				</Grid>
 				<Grid xs={12} md={12}>
-					<SurfActivityTable surfExperiences={surfExperiencesData} />
+					<SurfActivityTable surfExperiences={filteredSurfExperiences} />
 				</Grid>
 			</Grid.Container>
 		</div>

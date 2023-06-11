@@ -11,33 +11,43 @@ datasource db {
 }
 
 model Location {
-  id           String         @id @default(cuid())
-  name         String
-  type         String
-  city         String?
-  state        String?
-  zip          String?
-  country      String?
-  external_id  String?
-  external_spot_id  String?
-  SurfActivity SurfActivity[]
+  id               String         @id @default(cuid())
+  name             String
+  type             String
+  city             String?
+  state            String?
+  zip              String?
+  country          String?
+  external_id      String?
+  external_spot_id String?
+  SurfActivity     SurfActivity[]
+
   @@unique([type, external_id])
   @@unique([type, external_spot_id])
 }
 
-
-
 model SurfActivity {
   id                String              @id @default(cuid())
   date              DateTime            @db.Date
-  rating            Int
-  size              Int
-  timeOfDay         String
   locationId        String
   location          Location            @relation(fields: [locationId], references: [id])
   createdById       String
   createdBy         User                @relation(fields: [createdById], references: [id])
   SurfActivityUsers SurfActivityUsers[]
+  SurfRating        SurfRating[]
+}
+
+model SurfRating {
+  id             String       @id @default(cuid())
+  surfActivityId String
+  surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  rating         Int
+  size           Int
+  shape          Int
+
+  @@unique(fields: [surfActivityId, userId], name: "surfRating_surfActivityId_userId")
 }
 
 model SurfActivityUsers {
@@ -46,6 +56,8 @@ model SurfActivityUsers {
   surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id])
   userId         String
   user           User         @relation(fields: [userId], references: [id])
+
+  @@unique(fields: [surfActivityId, userId], name: "surfActivityUsers_surfActivityId_userId")
 }
 
 model User {
@@ -60,6 +72,7 @@ model User {
   mySurfActivity SurfActivity[]
   sessions       Session[]
   Account        Account[]
+  SurfRating     SurfRating[]
 }
 
 model Account {
