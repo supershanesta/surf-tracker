@@ -56,8 +56,10 @@ export async function GET(req: NextRequest) {
       _count: true
     });
 
-  
-    const locationData = await prisma.location.findMany({
+    if (locationIds.length === 0) {
+      return NextResponse.json([]);
+    }
+      const locationData = await prisma.location.findMany({
       where: {
         id: {
           in: locationIds.map((l) => l.locationId),
