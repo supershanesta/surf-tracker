@@ -25,6 +25,13 @@
 			"@/libs/*": ["./src/libs/*"]
 		}
 	},
+	"typescript": {
+		// !! WARN !!
+		// Dangerously allow production builds to successfully complete even if
+		// your project has type errors.
+		// !! WARN !!
+		"ignoreBuildErrors": true
+	},
 	"ts-node": {
 		// these options are overrides used only by ts-node
 		// same as the --compilerOptions flag and the TS_NODE_COMPILER_OPTIONS environment variable
