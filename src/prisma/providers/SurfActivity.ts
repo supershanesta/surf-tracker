@@ -13,7 +13,6 @@ interface CreateSurfActivity {
 
 export const create = async (data: CreateSurfActivity) => {
   const { date, users, beach, surfRating, surfSize, surfShape, userId } = data;
-  console.log(users)
   const createSurfActivity: Prisma.SurfActivityCreateInput = {
     date: new Date(date),
     location: { connect: { id: beach } },

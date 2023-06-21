@@ -11,6 +11,7 @@ import {
 
 //import { User } from "your-user-library"; // Import your user library
 import logo from '../../../public/logo.svg';
+import ModalWrapper from '../Modal';
 
 interface NavigationBarProps {
 	title: string;
@@ -55,6 +56,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ title }) => {
 						{item.name}
 					</Navbar.Link>
 				))}
+				<ModalWrapper />
 			</Navbar.Content>
 			{session?.user ? (
 				<AvatarDropDown user={session.user} />

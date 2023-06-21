@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/libs/prisma';
 
 interface CreateSurfRating {
   surfActivityId: string;
@@ -9,8 +9,7 @@ interface CreateSurfRating {
 }
 
 
-export const create = async  (data: CreateSurfRating) => {
-  const prisma = new PrismaClient();
+const create = async  (data: CreateSurfRating) => {
   // check surf activity id in database
   // if not found, throw error
   const surfActivity = await prisma.surfActivity.findUnique({
@@ -46,8 +45,20 @@ export const create = async  (data: CreateSurfRating) => {
       }
     }
   })
+  console.log(surfRating)
   if (surfRating) {
-    throw new Error('User has already rated this surf activity');
+    // update surf rating
+    const updatedSurfRating = await prisma.surfRating.update({
+      where: {
+        id: surfRating.id
+      },
+      data: {
+        rating: data.surfRating,
+        size: data.surfSize,
+        shape: data.surfShape
+      }
+    });
+    return updatedSurfRating;
   }
 
   // create surf rating
@@ -64,3 +75,51 @@ export const create = async  (data: CreateSurfRating) => {
   // return surf rating
   return newSurfRating;
 }
+
+const deletebyActivityAndUserId = async  (id: string, userId: string) => {
+  // delete surf rating
+  const deletedSurfRating = await prisma.surfRating.delete({
+    where: {
+      surfRating_surfActivityId_userId: {
+        surfActivityId: id,
+        userId: userId
+      }
+    }
+  });
+  return deletedSurfRating;
+}
+
+const get = async  (id: string) => {
+  const prevValues = await prisma.surfRating.findFirst({
+		where: {
+			id: {
+        equals: id,
+      }
+		},
+	});
+	console.log(prevValues)
+	return prevValues;
+}
+
+const getbyActivityAndUserId = async  (id: string, userId: string) => {
+  const prevValues = await prisma.surfRating.findFirst({
+		where: {
+			surfActivityId: {
+        equals: id,
+      },
+      userId: {
+        equals: userId,
+      }
+		},
+	});
+	return prevValues;
+}
+
+ const SurfRating = {
+  create,
+  get,
+  getbyActivityAndUserId,
+  deletebyActivityAndUserId
+}
+
+export default SurfRating;

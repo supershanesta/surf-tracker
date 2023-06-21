@@ -7,7 +7,8 @@ import {
 // pages/api/spots.ts
 import prisma from '@/libs/prisma';
 
-interface SurfActivity {  
+interface SurfActivity {
+    id: string;
     date: string;
     beach: string;
     surfRating: number;
@@ -62,6 +63,7 @@ export async function GET(req: NextRequest) {
       },
       select: {
         date: true,
+        id: true,
         location: {
           select: {
             name: true,
@@ -85,18 +87,20 @@ export async function GET(req: NextRequest) {
         let shape = 0;
       const myRating = surfExperience.SurfRating.find((rating) => rating.userId === userId);
       if (myRating) {
-        rating = surfExperience.SurfRating[0].rating;
-        size = surfExperience.SurfRating[0].size;
-        shape = surfExperience.SurfRating[0].shape;
+        rating = myRating.rating;
+        size = myRating.size;
+        shape = myRating.shape;
       }
       const surfActivity: SurfActivity = {
         // pad the month and day with a 0 if needed
+        id: surfExperience.id,
         date: surfExperience.date.getFullYear() + '-' + (surfExperience.date.getMonth() + 1).toString().padStart(2, '0') + '-' + surfExperience.date.getDate().toString().padStart(2, '0'),
         beach: surfExperience.location.name,
         surfRating: rating,
         surfSize: size,
         surfShape: shape,
       }
+      console.log('surfActivity', surfActivity)
       return surfActivity;
     });
       

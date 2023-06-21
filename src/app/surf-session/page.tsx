@@ -1,26 +1,16 @@
 "use client";
-import 'react';
+import "react";
 
-import {
-  useEffect,
-  useState,
-} from 'react';
+import { useEffect, useState } from "react";
 
-import {
-  format,
-  subDays,
-} from 'date-fns';
+import { format, subDays } from "date-fns";
 
-import MyActivityCharts from '@/components/charts/MyActivityCharts';
-import SurfActivityTable from '@/components/tables/SurfActivity';
-import {
-  Button,
-  FormElement,
-  Grid,
-  Input,
-} from '@nextui-org/react';
+import SurfActivityCards from "@/components/cards/SurfActivityCards";
+import MyActivityCharts from "@/components/charts/MyActivityCharts";
+import { Button, FormElement, Grid, Input } from "@nextui-org/react";
 
 export interface SurfActivity {
+	id: string;
 	date: string;
 	beach: string;
 	surfRating: number;
@@ -137,7 +127,7 @@ const SurfExperiences: React.FC = () => {
 					/>
 				</Grid>
 				<Grid xs={12} md={12}>
-					<SurfActivityTable surfExperiences={filteredSurfExperiences} />
+					<SurfActivityCards surfExperiences={filteredSurfExperiences} />
 				</Grid>
 			</Grid.Container>
 		</div>

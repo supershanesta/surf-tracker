@@ -22,13 +22,14 @@ export interface SurfRatingFormValues {
 
 interface FormProps {
 	onChange: (values: SurfRatingFormValues) => void;
+	defaults?: SurfRatingFormValues;
 }
 
-const SurfRatingForm: React.FC<FormProps> = ({ onChange }) => {
+const SurfRatingForm: React.FC<FormProps> = ({ onChange, defaults }) => {
 	const [formValues, setFormValues] = useState<SurfRatingFormValues>({
-		surfRating: 0,
-		surfSize: 0,
-		surfShape: 0,
+		surfRating: defaults?.surfRating || 0,
+		surfSize: defaults?.surfSize || 0,
+		surfShape: defaults?.surfShape || 0,
 	});
 
 	const handleSurfSizeChange = (e: ChangeEvent<FormElement>) => {
@@ -37,7 +38,7 @@ const SurfRatingForm: React.FC<FormProps> = ({ onChange }) => {
 			...prevValues,
 			surfSize: parseInt(value),
 		}));
-		onChange(formValues);
+		onChange({ ...formValues, surfSize: parseInt(value) });
 	};
 
 	const handleSurfRatingChange = (rating: number) => {
@@ -45,7 +46,7 @@ const SurfRatingForm: React.FC<FormProps> = ({ onChange }) => {
 			...prevValues,
 			surfRating: rating,
 		}));
-		onChange(formValues);
+		onChange({ ...formValues, surfRating: rating });
 	};
 
 	const handleSurfShapeChange = (shape: number) => {
@@ -53,7 +54,7 @@ const SurfRatingForm: React.FC<FormProps> = ({ onChange }) => {
 			...prevValues,
 			surfShape: shape,
 		}));
-		onChange(formValues);
+		onChange({ ...formValues, surfShape: shape });
 	};
 
 	return (
