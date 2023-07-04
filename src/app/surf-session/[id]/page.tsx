@@ -36,7 +36,7 @@ const AddSurfActivityPage: React.FC = () => {
 			const response = await fetch(
 				`${process.env.NEXT_PUBLIC_URL}api/surf-activity`,
 				{
-					method: "POST",
+					method: "PATCH",
 					headers: {
 						"Content-Type": "application/json",
 					},

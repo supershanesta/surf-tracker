@@ -1,18 +1,32 @@
 "use client";
-import "react";
+import 'react';
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from 'react';
 
-import { format, subDays } from "date-fns";
+import {
+  format,
+  subDays,
+} from 'date-fns';
 
-import SurfActivityCards from "@/components/cards/SurfActivityCards";
-import MyActivityCharts from "@/components/charts/MyActivityCharts";
-import { Button, FormElement, Grid, Input } from "@nextui-org/react";
+import SurfActivityCards, {
+  SurfActivityUser,
+} from '@/components/cards/SurfActivityCards';
+import MyActivityCharts from '@/components/charts/MyActivityCharts';
+import {
+  Button,
+  FormElement,
+  Grid,
+  Input,
+} from '@nextui-org/react';
 
 export interface SurfActivity {
 	id: string;
 	date: string;
 	beach: string;
+	users: SurfActivityUser[];
 	surfRating: number;
 	surfSize: number;
 	surfShape: number;
