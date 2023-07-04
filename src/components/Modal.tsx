@@ -1,10 +1,6 @@
 "use client";
 import useModal from '@/app/hooks/useModal';
-import {
-  Button,
-  Modal,
-  Text,
-} from '@nextui-org/react';
+import { Modal } from '@nextui-org/react';
 
 const ModalWrapper: React.FC = () => {
 	const { visible, closeModal } = useModal();
@@ -23,7 +19,7 @@ const ModalWrapper: React.FC = () => {
 			open={visible}
 			onClose={closeHandler}
 		>
-			<Modal.Header>
+			{/* <Modal.Header>
 				<Text id="modal-title" size={18}>
 					Are you Sure?
 				</Text>
@@ -41,7 +37,7 @@ const ModalWrapper: React.FC = () => {
 				<Button auto onPress={closeHandler}>
 					Delete
 				</Button>
-			</Modal.Footer>
+			</Modal.Footer> */}
 		</Modal>
 	);
 };
