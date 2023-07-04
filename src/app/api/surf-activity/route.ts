@@ -5,18 +5,54 @@ import {
 } from 'next/server';
 
 // pages/api/spots.ts
-import { create } from '@/prisma/providers/SurfActivity';
+import {
+  create,
+  getbyActivityAndUserId,
+} from '@/prisma/providers/SurfActivity';
 
-interface CreateSurfActivityRequest {
-	date: string;
-	users: string[];
-	beach: string;
+interface CreateSurfRatingRequest {
 	surfRating: number;
 	surfSize: number;
 	surfShape: number;
 }
+interface CreateSurfActivityRequest {
+	date: string;
+	users: string[];
+	beach: string;
+	surfRating: CreateSurfRatingRequest
+}
 
-
+export async function GET(req: NextRequest, res: NextResponse) {
+	if (!req.url) {
+		return NextResponse.json({
+			message: "No URL provided."
+		}, {
+			status: 400,
+		})
+	}
+	const token = await getToken({ req })
+	if (!token?.id) {
+		return NextResponse.json({
+			message: "Unauthorized"
+		}, {
+			status: 401,
+		});
+	}
+	const { searchParams } = new URL(req.url);
+	const surfActivityId = searchParams.get('surfActivityId');
+	if (!surfActivityId) {
+		return NextResponse.json({
+			message: "Missing surfActivityId"
+		}, {
+			status: 400,
+		});
+	}
+	const prevValues = await getbyActivityAndUserId(surfActivityId, token.id);
+	console.log('prevValues', prevValues)
+	return NextResponse.json(prevValues, {
+		status: 200,
+	});
+}
 
 export async function POST(req: NextRequest, res: NextResponse) {
 	if (!req.url) {

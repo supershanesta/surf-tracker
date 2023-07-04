@@ -23,36 +23,42 @@ import InputWrapper from './helpers/InputWrapper';
 import SurfRatingForm, { SurfRatingFormValues } from './SurfRating';
 
 export interface FormValues {
+	id?: string;
 	date: string;
 	users: User[] | null;
 	beach: Location | null;
-	surfRating: number;
-	surfSize: number;
-	surfShape: number;
+	surfRating?: SurfRatingFormValues;
+	createdBy?: string;
 }
 
 export interface SubmitValues {
 	date: string;
 	users: string[] | [];
 	beach: string;
-	surfRating: number;
-	surfSize: number;
-	surfShape: number;
+	surfRating?: SurfRatingFormValues;
 }
 interface FormProps {
 	onSubmit: (values: SubmitValues) => void;
+	data?: FormValues | null;
 }
 
-const SurfActivityForm: React.FC<FormProps> = ({ onSubmit }) => {
-	const [formValues, setFormValues] = useState<FormValues>({
-		// get date in local time zone
-		date: new Date().toISOString().split("T")[0],
-		users: null,
-		beach: null,
+const defaultValues: FormValues = {
+	date: new Date().toISOString().split("T")[0],
+	users: null,
+	beach: null,
+	surfRating: {
 		surfRating: 0,
 		surfSize: 0,
 		surfShape: 0,
-	});
+	},
+};
+
+const SurfActivityForm: React.FC<FormProps> = ({ onSubmit, data }) => {
+	console.log(data);
+	const [formValues, setFormValues] = useState<FormValues>(
+		data || defaultValues
+	);
+	console.log(formValues);
 	const handleChange = (e: ChangeEvent<FormElement | HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormValues((prevValues) => ({
@@ -64,9 +70,7 @@ const SurfActivityForm: React.FC<FormProps> = ({ onSubmit }) => {
 	const onSurfRatingChange = (values: SurfRatingFormValues) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
-			surfRating: values.surfRating,
-			surfSize: values.surfSize,
-			surfShape: values.surfShape,
+			surfRating: values,
 		}));
 	};
 
@@ -113,21 +117,38 @@ const SurfActivityForm: React.FC<FormProps> = ({ onSubmit }) => {
 						<InputWrapper label="Users:">
 							<SearchSelect
 								type={SelectType.User}
+								defaultValue={formValues.users}
 								onChange={handleUsersChange}
 								className="w-full"
 							/>
 						</InputWrapper>
 						<InputWrapper label="Beach:">
 							<SearchSelect
+								defaultValue={formValues.beach}
 								type={SelectType.Beach}
 								onChange={handleBeachChange}
 								className="w-full"
 							/>
 						</InputWrapper>
-						<SurfRatingForm onChange={onSurfRatingChange} />
-						<Grid md={12} justify="flex-end">
-							<Button type="submit">Submit</Button>
-						</Grid>
+						<SurfRatingForm
+							defaults={formValues.surfRating}
+							onChange={onSurfRatingChange}
+						/>
+						<Grid.Container gap={1} justify="space-around">
+							{data && (
+								<Grid xs={12} md={5} justify="center">
+									<Button size="sm" type="button">
+										Delete
+									</Button>
+								</Grid>
+							)}
+
+							<Grid xs={12} md={5} justify="center">
+								<Button size="sm" type="submit">
+									Submit
+								</Button>
+							</Grid>
+						</Grid.Container>
 					</Grid.Container>
 				</form>
 			</Card>

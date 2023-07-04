@@ -7,13 +7,20 @@ import {
 // pages/api/spots.ts
 import prisma from '@/libs/prisma';
 
+interface SurfActivityUsers {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
 interface SurfActivity {
     id: string;
     date: string;
     beach: string;
-    surfRating: number;
-    surfSize: number;
-    surfShape: number;
+    users: SurfActivityUsers[];
+    surfRatingId: string | null;
+    surfRating: number | null;
+    surfSize: number | null;
+    surfShape: number | null;
 }
 
 export async function GET(req: NextRequest) {
@@ -61,6 +68,9 @@ export async function GET(req: NextRequest) {
           },
         },
       },
+      orderBy: [
+        { date: 'asc' },
+      ],
       select: {
         date: true,
         id: true,
@@ -69,8 +79,20 @@ export async function GET(req: NextRequest) {
             name: true,
           },
         },
+        SurfActivityUsers: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+              }
+            },
+          },
+        },
         SurfRating: {
           select: {
+            id: true,
             userId: true,
             rating: true,
             size: true,
@@ -96,6 +118,8 @@ export async function GET(req: NextRequest) {
         id: surfExperience.id,
         date: surfExperience.date.getFullYear() + '-' + (surfExperience.date.getMonth() + 1).toString().padStart(2, '0') + '-' + surfExperience.date.getDate().toString().padStart(2, '0'),
         beach: surfExperience.location.name,
+        users: surfExperience.SurfActivityUsers.filter(({ user }) => user.id !== userId).map(({ user }) => user),
+        surfRatingId: myRating?.id || null,
         surfRating: rating,
         surfSize: size,
         surfShape: shape,

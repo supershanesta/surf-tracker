@@ -52,12 +52,14 @@ interface SearchSelectProps {
 	type: SelectType;
 	onChange: (option: any) => void;
 	className?: string;
+	defaultValue?: any;
 }
 
 const SearchSelect: React.FC<SearchSelectProps> = ({
 	type,
 	onChange,
 	className,
+	defaultValue,
 }) => {
 	const {
 		labelColumn,
@@ -68,7 +70,9 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 		multiselect,
 	} = SelectTypeDetails[type];
 	const [options, setOptions] = useState<any[]>([]);
-	const [selectedOption, setSelectedOption] = useState<any | null>(null);
+	const [selectedOption, setSelectedOption] = useState<any | null>(
+		defaultValue || null
+	);
 
 	const loadOptions: (
 		input: string,
@@ -107,7 +111,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 		console.log(option);
 		onChange(option);
 	};
-
+	console.log(defaultValue);
 	return (
 		<AsyncSelect
 			id={`select-${SelectType[type]}`}

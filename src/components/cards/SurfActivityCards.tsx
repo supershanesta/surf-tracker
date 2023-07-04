@@ -1,17 +1,28 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
-import { Button, Card, Grid } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  Grid,
+} from '@nextui-org/react';
 
-import SurfActivityCard from "./SurfActivityCard";
+import SurfActivityCard from './SurfActivityCard';
 
+export interface SurfActivityUser {
+	id: string;
+	firstName: string;
+	lastName: string;
+}
 export interface SurfActivity {
 	id: string;
 	date: string;
 	beach: string;
-	surfRating: number;
-	surfSize: number;
-	surfShape: number;
+	users: SurfActivityUser[];
+	surfRatingId?: string;
+	surfRating?: number;
+	surfSize?: number;
+	surfShape?: number;
 }
 
 interface SurfActivityCardProps {

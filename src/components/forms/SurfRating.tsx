@@ -15,6 +15,7 @@ import {
 import InputWrapper from './helpers/InputWrapper';
 
 export interface SurfRatingFormValues {
+	id?: string;
 	surfRating: number;
 	surfSize: number;
 	surfShape: number;

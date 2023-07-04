@@ -4,24 +4,24 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "next build",
+		"build": "prisma generate && prisma db push && next build",
 		"start": "next start -p 3333",
 		"lint": "next lint",
 		"db:push": "npx prisma db push",
 		"sync": "ts-node ./src/services/surfLine/useCase/getRegionBeaches.ts",
 		"seed": "ts-node ./src/prisma/scripts/addUsers.ts",
+		"db:migrate:sqlite": "ts-node ./src/prisma/scripts/migrate-data-from-postgres.ts",
 		"delete": "ts-node ./src/prisma/scripts/removeActivites.ts"
 	},
 	"dependencies": {
 		"@next-auth/prisma-adapter": "^1.0.6",
 		"@nextui-org/react": "^1.0.0-beta.12",
 		"@prisma/client": "^4.14.1",
-		"@types/bluebird": "^3.5.38",
-		"@types/lodash": "^4.14.195",
 		"@types/node": "20.1.4",
 		"@types/react": "18.2.6",
 		"@types/react-dom": "18.2.4",
-		"autoprefixer": "10.4.14",
+		"@types/bluebird": "^3.5.38",
+		"@types/lodash": "^4.14.195",
 		"axios": "^1.4.0",
 		"bluebird": "^3.7.2",
 		"date-fns": "^2.30.0",
@@ -31,7 +31,6 @@
 		"lodash": "^4.17.21",
 		"next": "^13.4.2",
 		"next-auth": "^4.22.1",
-		"postcss": "8.4.23",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-iconly": "^2.2.10",
@@ -39,6 +38,12 @@
 		"tailwindcss": "3.3.2",
 		"ts-node": "^10.9.1",
 		"typescript": "5.0.4"
+	},
+	"devDependencies": {
+		"autoprefixer": "10.4.14",
+		"postcss": "8.4.23",
+		"prisma": "^4.13.1",
+		"tailwindcss": "3.3.2"
 	},
 	"prisma": {
 		"schema": "./src/prisma/schema.prisma"
