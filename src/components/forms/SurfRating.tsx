@@ -6,6 +6,7 @@ import {
 } from 'react';
 
 import SurfRating from '@/components/inputs/SurfRating';
+import { SurfRatingFormType } from '@/types/forms';
 import {
   FormElement,
   Grid,
@@ -14,48 +15,42 @@ import {
 
 import InputWrapper from './helpers/InputWrapper';
 
-export interface SurfRatingFormValues {
-	id?: string;
-	surfRating: number;
-	surfSize: number;
-	surfShape: number;
-}
-
 interface FormProps {
-	onChange: (values: SurfRatingFormValues) => void;
-	defaults?: SurfRatingFormValues;
+	onChange: (values: SurfRatingFormType) => void;
+	defaults?: SurfRatingFormType;
 }
 
 const SurfRatingForm: React.FC<FormProps> = ({ onChange, defaults }) => {
-	const [formValues, setFormValues] = useState<SurfRatingFormValues>({
-		surfRating: defaults?.surfRating || 0,
-		surfSize: defaults?.surfSize || 0,
-		surfShape: defaults?.surfShape || 0,
+	const [formValues, setFormValues] = useState<SurfRatingFormType>({
+		id: defaults?.id || undefined,
+		rating: defaults?.rating || 0,
+		size: defaults?.size || 0,
+		shape: defaults?.shape || 0,
 	});
 
 	const handleSurfSizeChange = (e: ChangeEvent<FormElement>) => {
 		const { value } = e.target;
 		setFormValues((prevValues) => ({
 			...prevValues,
-			surfSize: parseInt(value),
+			size: parseInt(value),
 		}));
-		onChange({ ...formValues, surfSize: parseInt(value) });
+		onChange({ ...formValues, size: parseInt(value) });
 	};
 
 	const handleSurfRatingChange = (rating: number) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
-			surfRating: rating,
+			rating: rating,
 		}));
-		onChange({ ...formValues, surfRating: rating });
+		onChange({ ...formValues, rating: rating });
 	};
 
 	const handleSurfShapeChange = (shape: number) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
-			surfShape: shape,
+			shape: shape,
 		}));
-		onChange({ ...formValues, surfShape: shape });
+		onChange({ ...formValues, shape: shape });
 	};
 
 	return (
@@ -63,29 +58,29 @@ const SurfRatingForm: React.FC<FormProps> = ({ onChange, defaults }) => {
 			<InputWrapper label="Surf Size">
 				<Input
 					type="number"
-					id="surfSize"
-					name="surfSize"
+					id="size"
+					name="size"
 					required
-					value={formValues.surfSize}
+					value={formValues.size}
 					onChange={handleSurfSizeChange}
 				/>
 			</InputWrapper>
 
 			<InputWrapper label="Surf Shape">
 				<SurfRating
-					id="surfShape"
-					name="surfShape"
+					id="shape"
+					name="shape"
 					required
-					rating={formValues.surfShape}
+					rating={formValues.shape}
 					onChange={handleSurfShapeChange}
 				/>
 			</InputWrapper>
 			<InputWrapper label="Surf Rating">
 				<SurfRating
-					id="surfRating"
-					name="surfRating"
+					id="rating"
+					name="rating"
 					required
-					rating={formValues.surfRating}
+					rating={formValues.rating}
 					onChange={handleSurfRatingChange}
 				/>
 			</InputWrapper>

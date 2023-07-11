@@ -6,22 +6,10 @@ import {
 
 // pages/api/spots.ts
 import prisma from '@/libs/prisma';
-
-interface SurfActivityUsers {
-  id: string;
-  firstName: string;
-  lastName: string;
-}
-interface SurfActivity {
-    id: string;
-    date: string;
-    beach: string;
-    users: SurfActivityUsers[];
-    surfRatingId: string | null;
-    surfRating: number | null;
-    surfSize: number | null;
-    surfShape: number | null;
-}
+import {
+  SurfActivityType,
+  SurfRatingType,
+} from '@/types/types';
 
 export async function GET(req: NextRequest) {
 	if (!req.url) {
@@ -74,11 +62,8 @@ export async function GET(req: NextRequest) {
       select: {
         date: true,
         id: true,
-        location: {
-          select: {
-            name: true,
-          },
-        },
+        location: true,
+        createdBy: true,
         SurfActivityUsers: {
           select: {
             user: {
@@ -93,10 +78,10 @@ export async function GET(req: NextRequest) {
         SurfRating: {
           select: {
             id: true,
-            userId: true,
             rating: true,
             size: true,
             shape: true,
+            user: true
           },
         },
       },
@@ -104,25 +89,16 @@ export async function GET(req: NextRequest) {
 
     // conform to the interface
     const surfExperiencesFormatted = surfExperiences.map((surfExperience) => {
-        let rating = 0;
-        let size = 0;
-        let shape = 0;
-      const myRating = surfExperience.SurfRating.find((rating) => rating.userId === userId);
-      if (myRating) {
-        rating = myRating.rating;
-        size = myRating.size;
-        shape = myRating.shape;
-      }
-      const surfActivity: SurfActivity = {
+      const myRating: SurfRatingType | undefined = surfExperience.SurfRating.find((rating) => rating.user.id === userId);
+      const surfActivity: SurfActivityType = {
         // pad the month and day with a 0 if needed
         id: surfExperience.id,
-        date: surfExperience.date.getFullYear() + '-' + (surfExperience.date.getMonth() + 1).toString().padStart(2, '0') + '-' + surfExperience.date.getDate().toString().padStart(2, '0'),
-        beach: surfExperience.location.name,
+        date: surfExperience.date.toISOString().split('T')[0],
+        beach: surfExperience.location,
         users: surfExperience.SurfActivityUsers.filter(({ user }) => user.id !== userId).map(({ user }) => user),
-        surfRatingId: myRating?.id || null,
-        surfRating: rating,
-        surfSize: size,
-        surfShape: shape,
+        surfRatings: surfExperience.SurfRating,
+        mySurfRating: myRating,
+        createdBy: surfExperience.createdBy,
       }
       console.log('surfActivity', surfActivity)
       return surfActivity;

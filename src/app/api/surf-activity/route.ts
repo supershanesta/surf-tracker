@@ -4,55 +4,8 @@ import {
   NextResponse,
 } from 'next/server';
 
-// pages/api/spots.ts
-import {
-  create,
-  getbyActivityAndUserId,
-} from '@/prisma/providers/SurfActivity';
-
-interface CreateSurfRatingRequest {
-	surfRating: number;
-	surfSize: number;
-	surfShape: number;
-}
-interface CreateSurfActivityRequest {
-	date: string;
-	users: string[];
-	beach: string;
-	surfRating: CreateSurfRatingRequest
-}
-
-export async function GET(req: NextRequest, res: NextResponse) {
-	if (!req.url) {
-		return NextResponse.json({
-			message: "No URL provided."
-		}, {
-			status: 400,
-		})
-	}
-	const token = await getToken({ req })
-	if (!token?.id) {
-		return NextResponse.json({
-			message: "Unauthorized"
-		}, {
-			status: 401,
-		});
-	}
-	const { searchParams } = new URL(req.url);
-	const surfActivityId = searchParams.get('surfActivityId');
-	if (!surfActivityId) {
-		return NextResponse.json({
-			message: "Missing surfActivityId"
-		}, {
-			status: 400,
-		});
-	}
-	const prevValues = await getbyActivityAndUserId(surfActivityId, token.id);
-	console.log('prevValues', prevValues)
-	return NextResponse.json(prevValues, {
-		status: 200,
-	});
-}
+import SurfActivity from '@/prisma/providers/SurfActivity';
+import { CreateSurfActivityInputType } from '@/types/api';
 
 export async function POST(req: NextRequest, res: NextResponse) {
 	if (!req.url) {
@@ -74,14 +27,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 			});
     }
 
-    const userId = token.id;
-    const data: CreateSurfActivityRequest = await req.json();
-		
-		
-		await create({
-			...data,
-			userId
-		});
+    const data: CreateSurfActivityInputType = await req.json();
+		await new SurfActivity(token.id).create(data);
 
 		return NextResponse.json({
 			message: "Surf activity saved successfully"

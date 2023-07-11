@@ -11,26 +11,15 @@ import {
   subDays,
 } from 'date-fns';
 
-import SurfActivityCards, {
-  SurfActivityUser,
-} from '@/components/cards/SurfActivityCards';
+import SurfActivityCards from '@/components/cards/SurfActivityCards';
 import MyActivityCharts from '@/components/charts/MyActivityCharts';
+import { SurfActivityType } from '@/types/types';
 import {
   Button,
   FormElement,
   Grid,
   Input,
 } from '@nextui-org/react';
-
-export interface SurfActivity {
-	id: string;
-	date: string;
-	beach: string;
-	users: SurfActivityUser[];
-	surfRating: number;
-	surfSize: number;
-	surfShape: number;
-}
 
 const SurfExperiences: React.FC = () => {
 	const [startDate, setStartDate] = useState(
@@ -40,7 +29,7 @@ const SurfExperiences: React.FC = () => {
 	const [filterRating, setFilterRating] = useState<number | undefined>(
 		undefined
 	);
-	const [data, setData] = useState<SurfActivity[]>([]);
+	const [data, setData] = useState<SurfActivityType[]>([]);
 
 	const handleFilterStartDateChange = (e: React.ChangeEvent<FormElement>) => {
 		console.log(e.target.value);
@@ -87,7 +76,7 @@ const SurfExperiences: React.FC = () => {
 		if (
 			filterRating &&
 			filterRating > 0 &&
-			experience.surfRating !== filterRating
+			experience.mySurfRating?.rating !== filterRating
 		) {
 			return false;
 		}

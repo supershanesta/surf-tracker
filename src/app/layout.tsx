@@ -1,5 +1,7 @@
 import './globals.css';
 
+import { ModalProvider } from '@/components/context/ModalContext';
+import { SnackBarProvider } from '@/components/context/SnackBarContext';
 import NavigationBar from '@/components/layouts/Navbar';
 
 import { NextAuthProvider } from '../providers/NextAuthProvider';
@@ -20,8 +22,12 @@ export default function RootLayout({
 		<html lang="en">
 			<body>
 				<NextAuthProvider>
-					<NavigationBar title="Title" />
-					<div className="p-8">{children}</div>
+					<ModalProvider>
+						<SnackBarProvider>
+							<NavigationBar title="Title" />
+							<div className="p-8">{children}</div>
+						</SnackBarProvider>
+					</ModalProvider>
 				</NextAuthProvider>
 			</body>
 		</html>

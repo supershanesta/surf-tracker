@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 
 import { debounce } from 'lodash';
@@ -116,6 +117,8 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 		<AsyncSelect
 			id={`select-${SelectType[type]}`}
 			name={SelectType[type]}
+			menuPortalTarget={document.body}
+			menuPosition={"fixed"}
 			loadOptions={loadOptions}
 			getOptionLabel={labelColumn}
 			getOptionValue={(option) => option[valueColumn]}

@@ -1,32 +1,18 @@
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Setting } from 'react-iconly';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Setting } from "react-iconly";
 
-import {
-  Badge,
-  Button,
-  Card,
-  Grid,
-} from '@nextui-org/react';
+import { SurfActivityType } from "@/types/types";
+import { Badge, Button, Card, Grid } from "@nextui-org/react";
 
-import shellSelected from '../../../public/shell-selected.svg';
-import { SurfActivity } from './SurfActivityCards';
+import shellSelected from "../../../public/shell-selected.svg";
 
 interface SurfActivityCardProps {
-	experience: SurfActivity;
+	experience: SurfActivityType;
 }
 
 const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
-	const {
-		id,
-		date,
-		beach,
-		users,
-		surfRatingId,
-		surfSize,
-		surfShape,
-		surfRating,
-	} = experience;
+	const { id, date, beach, users, mySurfRating } = experience;
 	const router = useRouter();
 	return (
 		<Grid md={2}>
@@ -37,12 +23,12 @@ const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
 							{date}
 						</Grid>
 						<Grid xs={4} justify="flex-end">
-							<div onClick={() => router.push(`/surf-session/${id}`)}>
+							<div onClick={() => router.push(`/surf-session/${id}/edit`)}>
 								<Setting />
 							</div>
 						</Grid>
 						<Grid xs={12} justify="center">
-							{beach}
+							{beach.name}
 						</Grid>
 						<Grid xs={12}>
 							{users.map((user) => (
@@ -59,27 +45,31 @@ const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
 						justify="center"
 						className="border border-solid rounded-md"
 					>
-						{surfRatingId ? (
+						{mySurfRating ? (
 							<Grid.Container xs={12} justify="center" className="!p-1">
 								<Grid xs={12} justify="flex-end">
 									<div
-										onClick={() => router.push(`/surf-session/${id}/rating`)}
+										onClick={() =>
+											router.push(
+												`/surf-session/${id}/rating/${mySurfRating.id}`
+											)
+										}
 									>
 										<Setting />
 									</div>
 								</Grid>
 								<Grid xs={6} justify="center">
-									Size: {surfSize}
+									Size: {mySurfRating.size}
 								</Grid>
 								<Grid xs={6} justify="center">
-									Shape: {surfShape}
+									Shape: {mySurfRating.shape}
 								</Grid>
 								<Grid xs={12} justify="center">
 									<div className="flex items-center">Rating: </div>
 									<div className="relative">
 										<Image alt="shell" src={shellSelected} />
 										<span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-20%]">
-											{surfRating}
+											{mySurfRating.rating}
 										</span>
 									</div>
 								</Grid>

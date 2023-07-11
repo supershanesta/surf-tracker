@@ -5,13 +5,14 @@ import {
   filters,
   rawData,
 } from '@/components/charts/types';
+import { SurfActivityType } from '@/types/types';
 import {
   Card,
   Grid,
 } from '@nextui-org/react';
 
 interface SurfChartsProps {
-	surfExperiencesData: SurfExperience[];
+	surfExperiencesData: SurfActivityType[];
 	filters: filters;
 }
 
@@ -54,7 +55,8 @@ const MyActivityCharts: React.FC<SurfChartsProps> = ({
 			ratingsCount[rating] = 0;
 		});
 		surfExperiencesData.forEach((experience) => {
-			const rating = experience.surfRating;
+			const rating = experience.mySurfRating?.rating;
+			if (!rating) return;
 			ratingsCount[rating]++;
 		});
 		const ratingsChartData = ratings.map((rating) => ({
@@ -66,10 +68,10 @@ const MyActivityCharts: React.FC<SurfChartsProps> = ({
 		const beaches: rawData = {};
 		surfExperiencesData.forEach((experience) => {
 			const beach = experience.beach;
-			if (beaches[beach]) {
-				beaches[beach]++;
+			if (beaches[beach.name]) {
+				beaches[beach.name]++;
 			} else {
-				beaches[beach] = 1;
+				beaches[beach.name] = 1;
 			}
 		});
 		const beachesChartData = Object.entries(beaches).map(([beach, count]) => ({

@@ -40,7 +40,7 @@ model SurfActivity {
 model SurfRating {
   id             String       @id @default(cuid())
   surfActivityId String
-  surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id])
+  surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id], onDelete: Cascade)
   userId         String
   user           User         @relation(fields: [userId], references: [id])
   rating         Int
@@ -53,7 +53,7 @@ model SurfRating {
 model SurfActivityUsers {
   id             String       @id @default(cuid())
   surfActivityId String
-  surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id])
+  surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id], onDelete: Cascade)
   userId         String
   user           User         @relation(fields: [userId], references: [id])
 

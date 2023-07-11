@@ -3,9 +3,23 @@
 import {
   ChangeEvent,
   FormEvent,
+  useCallback,
   useState,
 } from 'react';
 
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+
+import { useModal } from '@/components/context/ModalContext';
+import { useSnackBar } from '@/components/context/SnackBarContext';
+import {
+  SurfActivityFormType,
+  SurfRatingFormType,
+} from '@/types/forms';
+import {
+  LocationType,
+  SurfActivityType,
+} from '@/types/types';
 import {
   Button,
   Card,
@@ -13,52 +27,69 @@ import {
   Grid,
   Input,
 } from '@nextui-org/react';
-import {
-  Location,
-  User,
-} from '@prisma/client';
+import { User } from '@prisma/client';
 
-import SearchSelect, { SelectType } from '../inputs/SearchSelect';
+import { SelectType } from '../inputs/SearchSelect';
 import InputWrapper from './helpers/InputWrapper';
-import SurfRatingForm, { SurfRatingFormValues } from './SurfRating';
+import SurfRatingForm from './SurfRating';
 
-export interface FormValues {
-	id?: string;
-	date: string;
-	users: User[] | null;
-	beach: Location | null;
-	surfRating?: SurfRatingFormValues;
-	createdBy?: string;
-}
+const SearchSelect = dynamic(() => import("../inputs/SearchSelect"), {
+	ssr: false,
+});
 
-export interface SubmitValues {
-	date: string;
-	users: string[] | [];
-	beach: string;
-	surfRating?: SurfRatingFormValues;
-}
 interface FormProps {
-	onSubmit: (values: SubmitValues) => void;
-	data?: FormValues | null;
+	onSubmit: (values: SurfActivityFormType) => void;
+	data?: SurfActivityType | null;
+	showRating?: boolean;
 }
 
-const defaultValues: FormValues = {
-	date: new Date().toISOString().split("T")[0],
-	users: null,
+const defaultValues: SurfActivityFormType = {
+	date: new Date().toLocaleDateString("en-CA"),
+	users: [],
 	beach: null,
 	surfRating: {
-		surfRating: 0,
-		surfSize: 0,
-		surfShape: 0,
+		rating: 0,
+		size: 0,
+		shape: 0,
 	},
 };
 
-const SurfActivityForm: React.FC<FormProps> = ({ onSubmit, data }) => {
-	console.log(data);
-	const [formValues, setFormValues] = useState<FormValues>(
-		data || defaultValues
+const SurfActivityForm: React.FC<FormProps> = ({
+	onSubmit,
+	data,
+	showRating = false,
+}) => {
+	const { openModal, visible } = useModal();
+	const { openSnackBar } = useSnackBar();
+	const router = useRouter();
+
+	const deleteSurfActivity = useCallback(async () => {
+		const id = data?.id;
+		const res = await fetch(`/api/surf-activity/${id}`, {
+			method: "DELETE",
+		});
+		if (!res.ok) {
+			throw new Error("Something went wrong");
+		}
+
+		router.push("/surf-session");
+		openSnackBar("success", "Surf activity deleted");
+	}, [data?.id, openSnackBar, router]);
+
+	const openModalTest = (id: string) => {
+		openModal(() => deleteSurfActivity(), "Are you sure?", "Cancel", "Delete");
+	};
+	const [formValues, setFormValues] = useState<SurfActivityFormType>(
+		data
+			? {
+					id: data.id,
+					date: data.date,
+					users: data.users,
+					beach: data.beach,
+					surfRating: data?.mySurfRating || defaultValues.surfRating,
+			  }
+			: defaultValues
 	);
-	console.log(formValues);
 	const handleChange = (e: ChangeEvent<FormElement | HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormValues((prevValues) => ({
@@ -67,14 +98,14 @@ const SurfActivityForm: React.FC<FormProps> = ({ onSubmit, data }) => {
 		}));
 	};
 
-	const onSurfRatingChange = (values: SurfRatingFormValues) => {
+	const onSurfRatingChange = (values: SurfRatingFormType) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
 			surfRating: values,
 		}));
 	};
 
-	const handleBeachChange = (selectedOption: Location | null) => {
+	const handleBeachChange = (selectedOption: LocationType | null) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
 			beach: selectedOption,
@@ -84,24 +115,18 @@ const SurfActivityForm: React.FC<FormProps> = ({ onSubmit, data }) => {
 	const handleUsersChange = (selectedOption: User[] | null) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
-			users: selectedOption,
+			users: selectedOption || [],
 		}));
 	};
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(formValues);
-		const parseValues = {
-			...formValues,
-			beach: formValues.beach?.id || "",
-			users: formValues.users?.map((user) => user.id) || [],
-		};
-		console.log(parseValues);
-		onSubmit(parseValues);
+		console.log("are we subitting in form?");
+		onSubmit(formValues);
 	};
 	return (
 		<Grid.Container gap={2} className="sm:center" md={3}>
-			<Card>
+			<Card className="!py-5">
 				<form onSubmit={handleSubmit}>
 					<Grid.Container gap={2} className="justify-center">
 						<InputWrapper label="Date:">
@@ -130,20 +155,27 @@ const SurfActivityForm: React.FC<FormProps> = ({ onSubmit, data }) => {
 								className="w-full"
 							/>
 						</InputWrapper>
-						<SurfRatingForm
-							defaults={formValues.surfRating}
-							onChange={onSurfRatingChange}
-						/>
+						{showRating && (
+							<SurfRatingForm
+								defaults={formValues.surfRating}
+								onChange={onSurfRatingChange}
+							/>
+						)}
 						<Grid.Container gap={1} justify="space-around">
 							{data && (
-								<Grid xs={12} md={5} justify="center">
-									<Button size="sm" type="button">
+								<Grid xs={5} md={5} justify="center">
+									<Button
+										color={"error"}
+										size="sm"
+										type="button"
+										onPress={() => openModalTest(data.id)}
+									>
 										Delete
 									</Button>
 								</Grid>
 							)}
 
-							<Grid xs={12} md={5} justify="center">
+							<Grid xs={5} md={5} justify="center">
 								<Button size="sm" type="submit">
 									Submit
 								</Button>

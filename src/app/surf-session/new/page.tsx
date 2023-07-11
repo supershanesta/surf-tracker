@@ -1,12 +1,26 @@
 "use client";
 import { useRouter } from 'next/navigation';
 
-import Form, { SubmitValues } from '@/components/forms/SurfActivity';
+import { useSnackBar } from '@/components/context/SnackBarContext';
+import Form from '@/components/forms/SurfActivity';
+import { CreateSurfActivityInputType } from '@/types/api';
+import { SurfActivityFormType } from '@/types/forms';
 import { Grid } from '@nextui-org/react';
+
+const formToApi = (
+	values: SurfActivityFormType
+): CreateSurfActivityInputType => {
+	return {
+		...values,
+		beach: values.beach?.id || "",
+		users: values.users?.map((user) => user.id) || [],
+	};
+};
 
 const AddSurfPage: React.FC = () => {
 	const router = useRouter();
-	const handleSubmit = async (values: SubmitValues) => {
+	const { openSnackBar } = useSnackBar();
+	const handleSubmit = async (values: SurfActivityFormType) => {
 		try {
 			const response = await fetch(
 				`${process.env.NEXT_PUBLIC_URL}api/surf-activity`,
@@ -15,7 +29,7 @@ const AddSurfPage: React.FC = () => {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(values),
+					body: JSON.stringify(formToApi(values)),
 				}
 			);
 
@@ -25,7 +39,9 @@ const AddSurfPage: React.FC = () => {
 
 			// Handle success
 			// redirect to surf activity page
+
 			router.push("/surf-session");
+			openSnackBar("success", "Surf activity created");
 		} catch (error) {
 			// Handle error
 			console.error("Error:", error);
@@ -35,7 +51,7 @@ const AddSurfPage: React.FC = () => {
 
 	return (
 		<Grid.Container className="" justify="center">
-			<Form onSubmit={handleSubmit} />
+			<Form onSubmit={handleSubmit} showRating={true} />
 		</Grid.Container>
 	);
 };

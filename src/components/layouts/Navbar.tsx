@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
 import AvatarDropDown from '@/components/layouts/AvatarDropdown';
@@ -11,7 +12,20 @@ import {
 
 //import { User } from "your-user-library"; // Import your user library
 import logo from '../../../public/logo.svg';
-import ModalWrapper from '../Modal';
+
+const Snackbar = dynamic(
+	() => {
+		return import("../utilities/SnackBar/SnackBar");
+	},
+	{ ssr: false }
+);
+
+const ModalWrapper = dynamic(
+	() => {
+		return import("../Modal");
+	},
+	{ ssr: false }
+);
 
 interface NavigationBarProps {
 	title: string;
@@ -37,7 +51,6 @@ const navigationItems: navigationItem[] = [
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ title }) => {
 	const { data: session } = useSession();
-
 	return (
 		<Navbar maxWidth={"fluid"} isBordered variant="sticky">
 			<Navbar.Brand>
@@ -51,12 +64,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ title }) => {
 				activeColor="secondary"
 				variant="underline"
 			>
+				<ModalWrapper />
+				<Snackbar />
 				{navigationItems.map((item, index) => (
 					<Navbar.Link key={index} href={item.link}>
 						{item.name}
 					</Navbar.Link>
 				))}
-				<ModalWrapper />
 			</Navbar.Content>
 			{session?.user ? (
 				<AvatarDropDown user={session.user} />

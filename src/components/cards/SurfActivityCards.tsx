@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 
+import { SurfActivityType } from '@/types/types';
 import {
   Button,
   Card,
@@ -9,24 +10,8 @@ import {
 
 import SurfActivityCard from './SurfActivityCard';
 
-export interface SurfActivityUser {
-	id: string;
-	firstName: string;
-	lastName: string;
-}
-export interface SurfActivity {
-	id: string;
-	date: string;
-	beach: string;
-	users: SurfActivityUser[];
-	surfRatingId?: string;
-	surfRating?: number;
-	surfSize?: number;
-	surfShape?: number;
-}
-
 interface SurfActivityCardProps {
-	surfExperiences: SurfActivity[];
+	surfExperiences: SurfActivityType[];
 }
 
 const SurfActivityCards: React.FC<SurfActivityCardProps> = ({
@@ -43,7 +28,7 @@ const SurfActivityCards: React.FC<SurfActivityCardProps> = ({
 				) : (
 					<Card>
 						<Card.Body>
-							<Button ghost onClick={() => router.push("/add-surf-experience")}>
+							<Button ghost onClick={() => router.push("/surf-session/new")}>
 								Add Surf Experience
 							</Button>
 						</Card.Body>

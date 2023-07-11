@@ -1,45 +1,59 @@
 "use client";
-import useModal from '@/app/hooks/useModal';
-import { Modal } from '@nextui-org/react';
+import { createPortal } from 'react-dom';
+
+import {
+  Button,
+  Modal,
+  Text,
+} from '@nextui-org/react';
+
+import { useModal } from './context/ModalContext';
 
 const ModalWrapper: React.FC = () => {
-	const { visible, closeModal } = useModal();
-	console.log(visible);
+	const { visible, closeModal, props } = useModal();
+	const { callback, text, cancelText, confirmText } = props;
 
-	const closeHandler = () => {
-		closeModal();
-		console.log("closed");
+	const onConfirm = async () => {
+		await closeModal();
+		if (callback) {
+			try {
+				await callback();
+			} catch (e) {
+				console.error(e);
+			}
+		}
 	};
 
-	return (
+	const modal = (
 		<Modal
-			closeButton
 			blur
 			aria-labelledby="modal-title"
 			open={visible}
-			onClose={closeHandler}
+			onClose={closeModal}
 		>
-			{/* <Modal.Header>
+			<Modal.Header>
 				<Text id="modal-title" size={18}>
-					Are you Sure?
+					{text}
 				</Text>
 			</Modal.Header>
 			<Modal.Body>
-				<Text>
-					This action is irreversible. Are you sure you want to delete this
-					item?
-				</Text>
+				<Text>{text}</Text>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button auto flat color="error" onPress={closeHandler}>
-					Close
+				<Button auto flat color="error" onPress={closeModal}>
+					{cancelText}
 				</Button>
-				<Button auto onPress={closeHandler}>
-					Delete
+				<Button auto type="button" onPress={onConfirm}>
+					{confirmText}
 				</Button>
-			</Modal.Footer> */}
+			</Modal.Footer>
 		</Modal>
 	);
+
+	if (typeof window === "object") {
+		return createPortal(modal, document.body);
+	}
+	return null;
 };
 
 export default ModalWrapper;

@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
 	// @ts-ignore
 	if (!global.prisma) {
 		// @ts-ignore
-		global.prisma = new PrismaClient({log: ['query', 'info', 'warn', 'error']});
+		global.prisma = new PrismaClient({log: ['error']});
 	}
 	// @ts-ignore
 	prisma = global.prisma;

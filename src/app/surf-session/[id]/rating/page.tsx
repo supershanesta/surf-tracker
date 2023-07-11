@@ -10,9 +10,11 @@ import {
   useRouter,
 } from 'next/navigation';
 
-import useModal from '@/app/hooks/useModal';
-import Form, { SurfRatingFormValues } from '@/components/forms/SurfRating';
-import api, { SurfRatingType } from '@/libs/api';
+import { useSnackBar } from '@/components/context/SnackBarContext';
+import Form from '@/components/forms/SurfRating';
+import api from '@/libs/api';
+import { SurfRatingFormType } from '@/types/forms';
+import { SurfRatingType } from '@/types/types';
 import {
   Button,
   Card,
@@ -22,20 +24,20 @@ import {
 const SurfRating: React.FC = () => {
 	const router = useRouter();
 	const { id } = useParams();
-	const { openModal } = useModal();
-	const [data, setData] = useState<SurfRatingFormValues | null>(null);
-	const [formValues, setFormValues] = useState<SurfRatingFormValues>({
-		surfRating: 0,
-		surfSize: 0,
-		surfShape: 0,
+	const { openSnackBar } = useSnackBar();
+	const [data, setData] = useState<SurfRatingFormType | null>(null);
+	const [formValues, setFormValues] = useState<SurfRatingFormType>({
+		rating: 0,
+		size: 0,
+		shape: 0,
 	});
-	const onSurfRatingChange = (values: SurfRatingFormValues) => {
-		console.log(values);
-		setFormValues({
-			surfRating: values.surfRating,
-			surfSize: values.surfSize,
-			surfShape: values.surfShape,
-		});
+	const onSurfRatingChange = (values: SurfRatingFormType) => {
+		setFormValues((prevValues) => ({
+			...prevValues,
+			rating: values.rating,
+			size: values.size,
+			shape: values.shape,
+		}));
 	};
 	useEffect(() => {
 		api
@@ -43,18 +45,15 @@ const SurfRating: React.FC = () => {
 				{ name: "surfActivityId", value: id },
 			])
 			.then((data) => {
-				console.log(data);
 				if (data) {
 					setData({
-						surfRating: data.rating,
-						surfSize: data.size,
-						surfShape: data.shape,
+						...data,
 					});
 				} else {
 					setData({
-						surfRating: 0,
-						surfSize: 0,
-						surfShape: 0,
+						rating: 0,
+						size: 0,
+						shape: 0,
 					});
 				}
 			});
@@ -68,7 +67,7 @@ const SurfRating: React.FC = () => {
 		};
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_URL}api/surf-rating`,
+				`${process.env.NEXT_PUBLIC_URL}api/surf-activity/${id}/surf-rating`,
 				{
 					method: "POST",
 					headers: {
@@ -81,11 +80,13 @@ const SurfRating: React.FC = () => {
 			console.log("RESPONSE", response);
 
 			if (!response.ok) {
+				openSnackBar("error", "Error Creating Surf Rating");
 				throw new Error("Failed to create surf activity");
 			}
 
 			// Handle success
 			// redirect to surf activity page
+			openSnackBar("success", "Surf Rating Created!");
 			await router.push("/surf-session");
 		} catch (error) {
 			// Handle error
@@ -96,21 +97,32 @@ const SurfRating: React.FC = () => {
 	if (!data) {
 		return <div>Loading...</div>;
 	}
+	if (data.id) {
+		// return a card saying that you already have a rating for this session
+		return (
+			<div className="flex justify-center">
+				<Grid.Container gap={2} className="sm:center" md={3}>
+					<Card>
+						<p>You have already rated this Session</p>
+					</Card>
+				</Grid.Container>
+			</div>
+		);
+	}
 	return (
 		<div className="flex justify-center">
 			<Grid.Container gap={2} className="sm:center" md={3}>
 				<Card>
 					<form onSubmit={handleSubmit}>
 						<Form onChange={onSurfRatingChange} defaults={data} />
-						<Grid.Container gap={2}>
+						<Grid.Container gap={2} justify="space-around">
 							<Grid>
 								<Button
-									color={"error"}
-									onPress={() => {
-										console.log("hello world"), openModal();
-									}}
+									auto
+									color="error"
+									onPress={() => router.push("/surf-session")}
 								>
-									Delete
+									Cancel
 								</Button>
 							</Grid>
 							<Grid>
