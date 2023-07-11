@@ -23,7 +23,8 @@
 			"@/*": ["./src/*"],
 			"@components/*": ["./src/components/*"],
 			"@/libs/*": ["./src/libs/*"],
-			"@/types/*": ["./src/types/*"]
+			"@/types/*": ["./src/types/*"],
+			"react": ["./node_modules/@types/react"]
 		}
 	},
 	"ts-node": {
