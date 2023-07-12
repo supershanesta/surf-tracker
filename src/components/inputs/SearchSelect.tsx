@@ -1,23 +1,29 @@
 "use client";
-import { useState } from 'react';
+import { useState } from "react";
 
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 import {
-  GetOptionLabel,
-  GroupBase,
-  OptionsOrGroups,
-} from 'react-select';
-import AsyncSelect from 'react-select/async';
+	CSSObjectWithLabel,
+	GetOptionLabel,
+	GroupBase,
+	OptionsOrGroups,
+	StylesConfig,
+} from "react-select";
+import AsyncSelect from "react-select/async";
 
-import {
-  Location,
-  User,
-} from '@prisma/client';
+import { Location, User } from "@prisma/client";
 
 export enum SelectType {
 	Beach = "Beach",
 	User = "User",
 }
+
+const customStyles: StylesConfig = {
+	option: (base: CSSObjectWithLabel): CSSObjectWithLabel => ({
+		...base,
+		color: "#11181c", // Change the text color to black
+	}),
+};
 
 export interface SelectTypeDetail {
 	[key: string]: {
@@ -128,6 +134,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 			onChange={handleChange}
 			isMulti={multiselect}
 			className={className}
+			styles={customStyles}
 		/>
 	);
 };
