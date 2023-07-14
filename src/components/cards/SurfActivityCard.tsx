@@ -1,11 +1,17 @@
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Setting } from "react-iconly";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Setting } from 'react-iconly';
 
-import { SurfActivityType } from "@/types/types";
-import { Badge, Button, Card, Grid } from "@nextui-org/react";
+import { SurfActivityType } from '@/types/types';
+import {
+  Badge,
+  Button,
+  Card,
+  Grid,
+  Textarea,
+} from '@nextui-org/react';
 
-import shellSelected from "../../../public/shell-selected.svg";
+import shellSelected from '../../../public/shell-selected.svg';
 
 interface SurfActivityCardProps {
 	experience: SurfActivityType;
@@ -40,12 +46,12 @@ const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
 					</Grid.Container>
 				</Card.Header>
 				<Card.Body>
-					<Grid.Container
-						gap={0}
-						justify="center"
-						className="border border-solid rounded-md"
-					>
-						{mySurfRating ? (
+					{mySurfRating ? (
+						<Grid.Container
+							gap={0}
+							justify="center"
+							className="border border-solid rounded-md"
+						>
 							<Grid.Container xs={12} justify="center" className="!p-1">
 								<Grid xs={12} justify="flex-end">
 									<div
@@ -73,18 +79,29 @@ const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
 										</span>
 									</div>
 								</Grid>
+								{mySurfRating.notes && (
+									<Grid xs={12} justify="center">
+										<Textarea
+											id="notes"
+											name="notes"
+											readOnly
+											fullWidth={true}
+											initialValue={mySurfRating.notes}
+										/>
+									</Grid>
+								)}
 							</Grid.Container>
-						) : (
-							<Grid xs={12} justify="center">
-								<Button
-									ghost
-									onClick={() => router.push(`/surf-session/${id}/rating`)}
-								>
-									Add your rating
-								</Button>
-							</Grid>
-						)}
-					</Grid.Container>
+						</Grid.Container>
+					) : (
+						<Grid xs={12} justify="center">
+							<Button
+								ghost
+								onClick={() => router.push(`/surf-session/${id}/rating`)}
+							>
+								Add your rating
+							</Button>
+						</Grid>
+					)}
 				</Card.Body>
 			</Card>
 		</Grid>

@@ -50,6 +50,7 @@ class SurfRating extends Provider {
           id: surfRating.id
         },
         data: {
+          notes: data.notes,
           rating: data.rating,
           size: data.size,
           shape: data.shape

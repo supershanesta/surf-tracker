@@ -1,37 +1,20 @@
 "use client";
 
-import {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useState,
-} from 'react';
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
-import { useModal } from '@/components/context/ModalContext';
-import { useSnackBar } from '@/components/context/SnackBarContext';
-import {
-  SurfActivityFormType,
-  SurfRatingFormType,
-} from '@/types/forms';
-import {
-  LocationType,
-  SurfActivityType,
-} from '@/types/types';
-import {
-  Button,
-  Card,
-  FormElement,
-  Grid,
-  Input,
-} from '@nextui-org/react';
-import { User } from '@prisma/client';
+import { useModal } from "@/components/context/ModalContext";
+import { useSnackBar } from "@/components/context/SnackBarContext";
+import { SurfActivityFormType, SurfRatingFormType } from "@/types/forms";
+import { LocationType, SurfActivityType } from "@/types/types";
+import { Button, Card, FormElement, Grid, Input } from "@nextui-org/react";
+import { User } from "@prisma/client";
 
-import { SelectType } from '../inputs/SearchSelect';
-import InputWrapper from './helpers/InputWrapper';
-import SurfRatingForm from './SurfRating';
+import { SelectType } from "../inputs/SearchSelect";
+import InputWrapper from "./helpers/InputWrapper";
+import SurfRatingForm from "./SurfRating";
 
 const SearchSelect = dynamic(() => import("../inputs/SearchSelect"), {
 	ssr: false,
@@ -48,6 +31,7 @@ const defaultValues: SurfActivityFormType = {
 	users: [],
 	beach: null,
 	surfRating: {
+		notes: "",
 		rating: 0,
 		size: 0,
 		shape: 0,

@@ -43,6 +43,7 @@ model SurfRating {
   surfActivity   SurfActivity @relation(fields: [surfActivityId], references: [id], onDelete: Cascade)
   userId         String
   user           User         @relation(fields: [userId], references: [id])
+  notes          String?
   rating         Int
   size           Int
   shape          Int

@@ -7,12 +7,14 @@ export interface CreateSurfActivityInputType {
 
 export interface CreateSurfRatingInputType {
   surfActivityId: string;
+  notes: string | null;
   rating: number;
   size: number;
   shape: number;
 }
 
 export interface CreateSurfActivitySurfRatingInputType {
+  notes: string | null;
   rating: number;
   size: number;
   shape: number;
@@ -20,6 +22,7 @@ export interface CreateSurfActivitySurfRatingInputType {
 
 export interface UpdateSurfRatingInputType {
   id: string;
+  notes: string;
   rating: number;
   size: number;
   shape: number;
@@ -27,6 +30,7 @@ export interface UpdateSurfRatingInputType {
 
 export interface UpdateSurfActivitySurfRatingInputType {
   id?: string;
+  notes: string;
   rating: number;
   size: number;
   shape: number;

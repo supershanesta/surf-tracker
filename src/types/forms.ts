@@ -13,6 +13,7 @@ export interface SurfActivityFormType {
 
 export interface SurfRatingFormType {
 	id?: string;
+  notes: string | null;
 	rating: number;
 	size: number;
 	shape: number;

@@ -36,6 +36,7 @@ class SurfActivity extends Provider {
           SurfRating: {
             select: {
               id: true,
+              notes: true,
               rating: true,
               size: true,
               shape: true,

@@ -7,6 +7,7 @@ export interface UserType {
 export interface SurfRatingType {
   id: string;
   user: UserType;
+  notes: string | null;
   rating: number;
 	size: number;
 	shape: number;

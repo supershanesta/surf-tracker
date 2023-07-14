@@ -27,6 +27,7 @@ const SurfRating: React.FC = () => {
 	const { openSnackBar } = useSnackBar();
 	const [data, setData] = useState<SurfRatingFormType | null>(null);
 	const [formValues, setFormValues] = useState<SurfRatingFormType>({
+		notes: "",
 		rating: 0,
 		size: 0,
 		shape: 0,
@@ -34,6 +35,7 @@ const SurfRating: React.FC = () => {
 	const onSurfRatingChange = (values: SurfRatingFormType) => {
 		setFormValues((prevValues) => ({
 			...prevValues,
+			notes: values.notes,
 			rating: values.rating,
 			size: values.size,
 			shape: values.shape,
@@ -51,6 +53,7 @@ const SurfRating: React.FC = () => {
 					});
 				} else {
 					setData({
+						notes: "",
 						rating: 0,
 						size: 0,
 						shape: 0,

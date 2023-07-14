@@ -78,6 +78,7 @@ export async function GET(req: NextRequest) {
         SurfRating: {
           select: {
             id: true,
+            notes: true,
             rating: true,
             size: true,
             shape: true,
