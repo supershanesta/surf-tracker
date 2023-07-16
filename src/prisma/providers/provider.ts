@@ -10,3 +10,11 @@ export default class Provider {
         this.prisma = prisma;
     }
 }
+
+export class UserlessProvider {
+    prisma: PrismaClient;
+
+    constructor() {
+        this.prisma = prisma;
+    }
+}

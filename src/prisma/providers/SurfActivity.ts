@@ -140,10 +140,13 @@ class SurfActivity extends Provider {
       },
     },
   };
-  await prisma.surfActivity.create({
+  const activity = await prisma.surfActivity.create({
     data: createSurfActivity
   });
-
+  if (activity) {
+    return this.get(activity.id);
+  }
+  return null;
   }
 
 async update(id: string, data: UpdateSurfActivityInputType) {
