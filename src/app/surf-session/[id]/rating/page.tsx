@@ -42,9 +42,10 @@ const SurfRating: React.FC = () => {
 		}));
 	};
 	useEffect(() => {
+		const parsedId = id as string;
 		api
 			.get<SurfRatingType>(`surf-rating`, [
-				{ name: "surfActivityId", value: id },
+				{ name: "surfActivityId", value: parsedId },
 			])
 			.then((data) => {
 				if (data) {
