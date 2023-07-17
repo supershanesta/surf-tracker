@@ -37,14 +37,16 @@ const AddSurfPage: React.FC = () => {
 	const [error, setError] = useState<boolean>(false);
 	const handleSubmit = async (values: SurfActivityFormType) => {
 		try {
+			// if array get first id
+			const parsedId = id as string;
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_URL}api/surf-activity/${id}`,
+				`${process.env.NEXT_PUBLIC_URL}api/surf-activity/${parsedId}`,
 				{
 					method: "PATCH",
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(formToApi(id, values)),
+					body: JSON.stringify(formToApi(parsedId, values)),
 				}
 			);
 
