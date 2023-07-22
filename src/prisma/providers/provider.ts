@@ -1,6 +1,8 @@
 import prisma from '@/libs/prisma';
 import { PrismaClient } from '@prisma/client';
 
+export { Prisma } from '@prisma/client';
+
 export default class Provider {
     userId: string;
     prisma: PrismaClient;

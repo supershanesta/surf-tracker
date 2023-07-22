@@ -16,14 +16,6 @@ interface SurfChartsProps {
 	filters: filters;
 }
 
-interface SurfExperience {
-	date: string;
-	beach: string;
-	surfShape: number;
-	surfRating: number;
-	surfSize: number;
-}
-
 const MyActivityCharts: React.FC<SurfChartsProps> = ({
 	surfExperiencesData,
 	filters,

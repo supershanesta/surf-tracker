@@ -23,20 +23,28 @@ import {
 
 const SurfExperiences: React.FC = () => {
 	const [startDate, setStartDate] = useState(
-		format(subDays(new Date(), 7), "yyyy-MM-dd")
+		typeof window !== "undefined"
+			? localStorage.getItem("startDate") ||
+					format(subDays(new Date(), 7), "yyyy-MM-dd")
+			: format(subDays(new Date(), 7), "yyyy-MM-dd")
 	);
-	const [endDate, setEndDate] = useState(format(new Date(), "yyyy-MM-dd"));
+	const [endDate, setEndDate] = useState(
+		typeof window !== "undefined"
+			? localStorage.getItem("endDate") || format(new Date(), "yyyy-MM-dd")
+			: format(new Date(), "yyyy-MM-dd")
+	);
 	const [filterRating, setFilterRating] = useState<number | undefined>(
 		undefined
 	);
 	const [data, setData] = useState<SurfActivityType[]>([]);
 
 	const handleFilterStartDateChange = (e: React.ChangeEvent<FormElement>) => {
-		console.log(e.target.value);
+		localStorage.setItem("startDate", e.target.value);
 		setStartDate(e.target.value);
 	};
 
 	const handleFilterEndDateChange = (e: React.ChangeEvent<FormElement>) => {
+		localStorage.setItem("endDate", e.target.value);
 		setEndDate(e.target.value);
 	};
 
@@ -45,8 +53,13 @@ const SurfExperiences: React.FC = () => {
 	};
 
 	const handleFilterReset = () => {
-		setStartDate("");
-		setEndDate("");
+		setStartDate(format(subDays(new Date(), 7), "yyyy-MM-dd"));
+		setEndDate(format(new Date(), "yyyy-MM-dd"));
+		localStorage.setItem(
+			"startDate",
+			format(subDays(new Date(), 7), "yyyy-MM-dd")
+		);
+		localStorage.setItem("endDate", format(new Date(), "yyyy-MM-dd"));
 		setFilterRating(undefined);
 	};
 

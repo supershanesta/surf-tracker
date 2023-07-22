@@ -31,3 +31,11 @@ export interface Taxonomy {
   contains: Taxonomy[];
   in: Taxonomy[];
 }
+
+export enum ForcastTypes {
+  rating = 'rating',
+  wave = 'wave',
+  wind = 'wind',
+  tides = 'tides',
+  weather = 'weather',
+}

@@ -10,6 +10,7 @@
 		"lint": "next lint",
 		"db:push": "npx prisma db push",
 		"sync": "ts-node ./src/services/surfLine/useCase/getRegionBeaches.ts",
+		"forcast:get": "ts-node -r tsconfig-paths/register ./src/services/surfLine/useCase/getForcasts.ts",
 		"seed": "ts-node ./src/prisma/scripts/addUsers.ts",
 		"add-records": "ts-node -r tsconfig-paths/register ./src/prisma/scripts/import-records.ts",
 		"db:migrate:sqlite": "ts-node ./src/prisma/scripts/migrate-data-from-postgres.ts",
@@ -32,6 +33,7 @@
 		"eslint": "8.40.0",
 		"eslint-config-next": "13.4.2",
 		"lodash": "^4.17.21",
+		"luxon": "^3.3.0",
 		"next": "^13.4.2",
 		"next-auth": "^4.22.1",
 		"react": "^18.2.0",
@@ -43,6 +45,7 @@
 		"typescript": "5.0.4"
 	},
 	"devDependencies": {
+		"@types/luxon": "^3.3.1",
 		"autoprefixer": "10.4.14",
 		"postcss": "8.4.23",
 		"prisma": "^4.13.1",

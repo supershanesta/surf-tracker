@@ -10,6 +10,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ForcastRating {
+  id          String   @id @default(cuid())
+  timestamp   DateTime  @db.Timestamptz
+  utcOffset   Int
+  location    Json
+  ratingKey   String
+  ratingValue Float
+  forcastId   String   @unique
+  forcast     Forcast  @relation(fields: [forcastId], references: [id])
+}
+
+model ForcastWaveSwells {
+  id            String      @id @default(cuid())
+  height        Float
+  period        Float
+  impact        Float
+  power         Float
+  direction     Float
+  directionMin  Float
+  optimalScore  Int
+  forcastWaveId String
+  forcastWave   ForcastWave @relation(fields: [forcastWaveId], references: [id])
+}
+
+model ForcastWave {
+  id               String              @id @default(cuid())
+  timestamp        DateTime           @db.Timestamptz
+  utcOffset        Int
+  units            Json
+  location         Json
+  forecastLocation Json
+  offshoreLocation Json
+  waveHeightMin    Float
+  waveHeightMax    Float
+  plus             Boolean
+  humanRelation    String
+  waveHeightRawMin Float
+  waveHeightRawMax Float
+  optimalScore     Int
+  power            Float
+  waveSwells       ForcastWaveSwells[]
+  forcastId        String              @unique
+  forcast          Forcast             @relation(fields: [forcastId], references: [id])
+}
+
+model ForcastWind {
+  id            String   @id @default(cuid())
+  timestamp     DateTime @db.Timestamptz
+  utcOffset     Int
+  units         Json
+  location      Json
+  speed         Float
+  direction     Float
+  directionType String
+  gust          Float
+  optimalScore  Int
+  forcastId     String   @unique
+  forcast       Forcast  @relation(fields: [forcastId], references: [id])
+}
+
+model ForcastTide {
+  id           String   @id @default(cuid())
+  timestamp    DateTime @db.Timestamptz
+  utcOffset    Int
+  units        Json
+  tideLocation Json
+  type         String
+  height       Float
+  forcastId    String   @unique
+  forcast      Forcast  @relation(fields: [forcastId], references: [id])
+}
+
+model ForcastSunLight {
+  id        String   @id @default(cuid())
+  timestamp DateTime @db.Timestamptz
+  utcOffset Int
+  midnight  DateTime
+  dawn      DateTime
+  sunrise   DateTime
+  sunset    DateTime
+  dusk      DateTime
+  forcastId String   @unique
+  forcast   Forcast  @relation(fields: [forcastId], references: [id])
+}
+
+model ForcastWeather {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @db.Timestamptz
+  utcOffset   Int
+  units       Json
+  temperature Float
+  condition   String
+  pressure    Float
+  forcastId   String   @unique
+  forcast     Forcast  @relation(fields: [forcastId], references: [id])
+}
+
+model Forcast {
+  id         String           @id @default(cuid())
+  timestamp  DateTime         @db.Timestamptz
+  utcOffset  Int
+  location   Location         @relation(fields: [locationId], references: [id])
+  locationId String
+  rating     ForcastRating?
+  waves      ForcastWave?
+  wind       ForcastWind?
+  tides      ForcastTide?
+  sunlight   ForcastSunLight?
+  weather    ForcastWeather?
+    @@unique([timestamp, locationId])
+}
+
 model Location {
   id               String         @id @default(cuid())
   name             String
@@ -19,8 +131,9 @@ model Location {
   zip              String?
   country          String?
   external_id      String?
-  external_spot_id String?
+  external_spot_id String? @unique
   SurfActivity     SurfActivity[]
+  Forcast          Forcast[]
 
   @@unique([type, external_id])
   @@unique([type, external_spot_id])
