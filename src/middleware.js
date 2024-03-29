@@ -9,7 +9,6 @@ export async function middleware(req, ev) {
 	const matchesProtectedPath = protectedPaths.some((path) =>
 		pathname.startsWith(path)
 	);
-	console.log(req.url);
 	if (matchesProtectedPath) {
 		const token = await getToken({ req });
 		if (!token) {
