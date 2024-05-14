@@ -125,11 +125,20 @@ const getSurfReports = async () => {
     case 'NorthAmerica':
       regionId = SurfLineController.taxonomy.regions.NorthAmerica;
       break;
+    case 'ElSalvador':
+      regionId = SurfLineController.taxonomy.regions.ElSalvador;
+      break;
+    case 'CostaRica':
+      regionId = SurfLineController.taxonomy.regions.CostaRica;
+      break;
     case 'Mexico':
       regionId = SurfLineController.taxonomy.regions.Mexico;
       break;
     case 'UnitedStates':
       regionId = SurfLineController.taxonomy.regions.UnitedStates;
+      break;
+    case 'Brazil':
+      regionId = SurfLineController.taxonomy.regions.Brazil;
       break;
     default:
       regionId = SurfLineController.taxonomy.regions.NorthAmerica;

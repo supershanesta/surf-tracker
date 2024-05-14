@@ -3,7 +3,10 @@ import { baseController } from './base';
 const Earth = "58f7ed51dadb30820bb38782";
 const NorthAmerica = "58f7ed51dadb30820bb38791";
 const UnitedStates = "58f7ed51dadb30820bb3879c";
-const Mexico = "58f7eeecdadb30820bb550cc"
+const Mexico = "58f7eeecdadb30820bb550cc";
+const ElSalvador = "58f7f07fdadb30820bb717de";
+const CostaRica = "58f7eef2dadb30820bb557af";
+const Brazil = "58f7efffdadb30820bb68b24";
 
 
 export class taxonomy extends baseController {
@@ -11,7 +14,10 @@ export class taxonomy extends baseController {
     Earth: string,
     NorthAmerica: string,
     UnitedStates: string,
-    Mexico: string
+    Mexico: string,
+    ElSalvador: string,
+    CostaRica: string,
+    Brazil: string,
   }
   constructor() {
     super();
@@ -19,7 +25,10 @@ export class taxonomy extends baseController {
       Earth,
       NorthAmerica,
       UnitedStates,
-      Mexico
+      Mexico,
+      ElSalvador,
+      CostaRica,
+      Brazil,
     }
   }
   async get(id: string, maxDepth = 0) {
