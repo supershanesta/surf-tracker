@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 			});
     }
 
-    const userId = token.id;
+  const userId = token.id;
 	const { searchParams } = new URL(req.url);
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');

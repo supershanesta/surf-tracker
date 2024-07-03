@@ -195,6 +195,7 @@ async update(id: string, data: UpdateSurfActivityInputType) {
       },
     });
   }
+
 }
 
 export default SurfActivity;
