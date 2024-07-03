@@ -2,10 +2,6 @@ import { useEffect, useRef } from "react";
 
 import type { ECharts } from "echarts";
 import { init } from "echarts";
-import { Text } from "@visx/text";
-import { scaleLog } from "@visx/scale";
-import Wordcloud from "@visx/wordcloud/lib/Wordcloud";
-import { totoAfricaLyrics } from "./text.fixture";
 import { ChartProps } from "@/components/charts/types";
 
 const BeachesPieChart: React.FC<ChartProps> = ({ data }) => {
