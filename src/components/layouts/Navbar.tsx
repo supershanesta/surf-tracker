@@ -6,8 +6,8 @@ import Image from 'next/image';
 
 import AvatarDropDown from '@/components/layouts/AvatarDropdown';
 import {
-  Navbar,
-  Text,
+	Navbar,
+	Text,
 } from '@nextui-org/react';
 
 //import { User } from "your-user-library"; // Import your user library
@@ -53,8 +53,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ title }) => {
 	const { data: session } = useSession();
 	return (
 		<Navbar maxWidth={"fluid"} isBordered variant="sticky">
-			<Navbar.Brand>
-				<Image alt="logo" src={logo} />
+			<Navbar.Brand className="flex items-center gap-2">
+				<Image width={40} height={40} alt="logo" src={logo} />
 				<Text b color="inherit" hideIn="xs">
 					Surf Tracker
 				</Text>
@@ -66,7 +66,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ title }) => {
 			>
 				<ModalWrapper />
 				<Snackbar />
-				{navigationItems.map((item, index) => (
+				{session?.user && navigationItems.map((item, index) => (
 					<Navbar.Link key={index} href={item.link}>
 						{item.name}
 					</Navbar.Link>

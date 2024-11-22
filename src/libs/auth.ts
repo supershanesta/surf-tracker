@@ -56,14 +56,17 @@ export const authOptions: NextAuthOptions = {
 			session = {
 				...session,
 				user: {
-						...session.user,
-						id: token.id,
-						firstName: token.firstName,
-						lastName: token.lastName,
-						admin: token.admin,
+					...session.user,
+					id: token.id,
+					firstName: token.firstName,
+					lastName: token.lastName,
+					admin: token.admin,
 				},
 			};
 			return session;
 		},
+	},
+	pages: {
+		signIn: '/auth/signin',
 	},
 };
