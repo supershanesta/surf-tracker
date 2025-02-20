@@ -17,7 +17,7 @@ sudo apt install nginx -y
 sudo tee /etc/nginx/sites-available/surf-tracker << EOF
 server {
     listen 80;
-    server_name surf.shanedrice.com;  # Replace with your domain
+    server_name surf.shanedrice.com www.surf.shanedrice.com;  # Added www subdomain
 
     location / {
         proxy_pass http://localhost:3333;
