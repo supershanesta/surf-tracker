@@ -2,11 +2,11 @@ import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
 
 import {
-  Avatar,
-  Dropdown,
-  Link,
-  Navbar,
-  Text,
+	Avatar,
+	Dropdown,
+	Link,
+	Navbar,
+	Text,
 } from '@nextui-org/react';
 
 interface AvatarDropDownProps {
@@ -22,7 +22,6 @@ const collapseItems = [
 ];
 
 const AvatarDropDown: React.FC<AvatarDropDownProps> = ({ user }) => {
-	console.log(user);
 	return (
 		<>
 			<Navbar.Content
@@ -64,7 +63,10 @@ const AvatarDropDown: React.FC<AvatarDropDownProps> = ({ user }) => {
 							</Text>
 						</Dropdown.Item>
 						<Dropdown.Item key="settings" withDivider>
-							My Settings
+							<Link href="/settings">My Settings</Link>
+						</Dropdown.Item>
+						<Dropdown.Item key="friends" withDivider>
+							<Link href="/friends">Friends</Link>
 						</Dropdown.Item>
 						<Dropdown.Item key="logout" withDivider color="error">
 							Log Out

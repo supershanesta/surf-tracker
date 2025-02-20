@@ -12,7 +12,7 @@ datasource db {
 
 model ForcastRating {
   id          String   @id @default(cuid())
-  timestamp   DateTime  @db.Timestamptz
+  timestamp   DateTime @db.Timestamptz
   utcOffset   Int
   location    Json
   ratingKey   String
@@ -36,7 +36,7 @@ model ForcastWaveSwells {
 
 model ForcastWave {
   id               String              @id @default(cuid())
-  timestamp        DateTime           @db.Timestamptz
+  timestamp        DateTime            @db.Timestamptz
   utcOffset        Int
   units            Json
   location         Json
@@ -119,7 +119,8 @@ model Forcast {
   tides      ForcastTide?
   sunlight   ForcastSunLight?
   weather    ForcastWeather?
-    @@unique([timestamp, locationId])
+
+  @@unique([timestamp, locationId])
 }
 
 model Location {
@@ -131,7 +132,7 @@ model Location {
   zip              String?
   country          String?
   external_id      String?
-  external_spot_id String? @unique
+  external_spot_id String?        @unique
   SurfActivity     SurfActivity[]
   Forcast          Forcast[]
 
@@ -175,18 +176,20 @@ model SurfActivityUsers {
 }
 
 model User {
-  id             String              @id @default(cuid())
-  email          String              @unique
-  firstName      String
-  lastName       String
-  phoneNumber    String?
-  password       String?
-  admin          Boolean?
-  surfActivity   SurfActivityUsers[]
-  mySurfActivity SurfActivity[]
-  sessions       Session[]
-  Account        Account[]
-  SurfRating     SurfRating[]
+  id                  String              @id @default(cuid())
+  email               String              @unique
+  firstName           String
+  lastName            String
+  phoneNumber         String?
+  password            String?
+  admin               Boolean?
+  surfActivity        SurfActivityUsers[]
+  mySurfActivity      SurfActivity[]
+  sessions            Session[]
+  Account             Account[]
+  SurfRating          SurfRating[]
+  sentFriendships     Friendship[]        @relation("FriendshipFromUser")
+  receivedFriendships Friendship[]        @relation("FriendshipToUser")
 }
 
 model Account {
@@ -222,4 +225,17 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Friendship {
+  id         String   @id @default(cuid())
+  fromUser   User     @relation("FriendshipFromUser", fields: [fromUserId], references: [id])
+  fromUserId String
+  toUser     User     @relation("FriendshipToUser", fields: [toUserId], references: [id])
+  toUserId   String
+  status     String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([fromUserId, toUserId])
 }
