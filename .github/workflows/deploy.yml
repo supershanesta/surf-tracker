@@ -54,9 +54,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/surf-tracker
-            npm ci
-            npx prisma generate
             export DATABASE_URL="${{ secrets.DATABASE_URL }}"
             export NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
             export NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}"
+            npx prisma db push
             pm2 restart surf-tracker || pm2 start ecosystem.config.js
