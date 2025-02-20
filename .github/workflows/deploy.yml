@@ -30,7 +30,8 @@ jobs:
       - name: Install dependencies and build
         run: |
           rm -rf node_modules && yarn install --frozen-lockfile
-          npm run build
+          npx prisma generate
+          next build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -54,4 +55,8 @@ jobs:
           script: |
             cd /home/ubuntu/surf-tracker
             npm ci
-            pm2 restart surf-tracker || pm2 start npm --name "surf-tracker" -- start
+            npx prisma generate
+            export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+            export NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
+            export NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}"
+            pm2 restart surf-tracker || pm2 start ecosystem.config.js
