@@ -31,7 +31,7 @@ jobs:
         run: |
           rm -rf node_modules && yarn install --frozen-lockfile
           npx prisma generate
-          next build
+          yarn build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
