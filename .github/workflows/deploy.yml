@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-west-1
   EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
 
 jobs:
@@ -34,6 +34,7 @@ jobs:
           yarn build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
 
@@ -55,6 +56,7 @@ jobs:
           script: |
             cd /home/ubuntu/surf-tracker
             export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+            export DIRECT_URL="${{ secrets.DIRECT_URL }}"
             export NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
             export NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}"
             npx prisma db push
