@@ -55,9 +55,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/surf-tracker
-            export DATABASE_URL="${{ secrets.DATABASE_URL }}"
-            export DIRECT_URL="${{ secrets.DIRECT_URL }}"
-            export NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
-            export NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}"
+            # Save environment variables to PM2
+            pm2 delete surf-tracker || true
+            pm2 set surf-tracker:DATABASE_URL "${{ secrets.DATABASE_URL }}"
+            pm2 set surf-tracker:DIRECT_URL "${{ secrets.DIRECT_URL }}"
+            pm2 set surf-tracker:NEXTAUTH_SECRET "${{ secrets.NEXTAUTH_SECRET }}"
+            pm2 set surf-tracker:NEXTAUTH_URL "${{ secrets.NEXTAUTH_URL }}"
+            npx prisma generate
             npx prisma db push
-            pm2 restart surf-tracker || pm2 start ecosystem.config.js
+            pm2 start ecosystem.config.js
+            pm2 save
