@@ -1,6 +1,11 @@
 // lib/prisma.ts
 import { PrismaClient } from '@prisma/client';
 
+// Add this type declaration
+declare global {
+  var prisma: PrismaClient | undefined;
+}
+
 let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === 'production') {
