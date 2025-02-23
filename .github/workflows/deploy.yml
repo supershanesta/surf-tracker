@@ -44,7 +44,7 @@ jobs:
           host: ${{ secrets.EC2_INSTANCE_IP }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: '.,!node_modules,!.git'
+          source: '.' # Include everything
           target: '/home/ubuntu/surf-tracker'
 
       - name: Execute deployment commands
