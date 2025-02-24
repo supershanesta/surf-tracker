@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ friends });
+    return NextResponse.json(friends);
   } catch (error) {
     console.error('Error fetching friends:', error);
     return NextResponse.json(
