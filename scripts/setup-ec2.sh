@@ -16,9 +16,17 @@ sudo apt install nginx -y
 
 # Configure nginx
 sudo tee /etc/nginx/sites-available/surf-tracker << EOF
+# Redirect non-www to www
 server {
     listen 80;
-    server_name surf.shanedrice.com www.surf.shanedrice.com;
+    server_name surf.shanedrice.com;
+    return 301 \$scheme://www.surf.shanedrice.com\$request_uri;
+}
+
+# Main server block for www
+server {
+    listen 80;
+    server_name www.surf.shanedrice.com;
 
     location / {
         # Reverse proxy for Next server

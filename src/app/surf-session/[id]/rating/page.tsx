@@ -71,7 +71,7 @@ const SurfRating: React.FC = () => {
 		};
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_URL}api/surf-activity/${id}/surf-rating`,
+				`${process.env.}api/surf-activity/${id}/surf-rating`,
 				{
 					method: "POST",
 					headers: {
