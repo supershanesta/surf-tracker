@@ -16,7 +16,6 @@ export async function GET(req: NextRequest) {
 		})
 	}
 	const session = await getToken({ req });
-	console.log(session);
 	const { searchParams } = new URL(req.url);
 	const searchQuery = searchParams.get('searchQuery') || '';
 	try {

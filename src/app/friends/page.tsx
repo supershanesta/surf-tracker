@@ -28,7 +28,6 @@ const FriendsPage = () => {
     fetchData: fetchPendingRequests,
   } = useRequest<FriendRequestType[]>({ url: '/api/friends/pending' });
 
-  console.log(friendsData);
 
   const handleSendRequest = async (userId: string) => {
     try {
@@ -98,7 +97,6 @@ const FriendsPage = () => {
             <SearchSelect
               type={SelectType.User}
               onChange={(user) => {
-                console.log(user);
                 handleSendRequest(user.id);
               }}
               className="w-full"

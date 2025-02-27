@@ -16,7 +16,11 @@ interface Row {
 }
 
 // Function to process each row
-const processRow = async (row: Row, user: User, surfActivityProvider: SurfActivity) => {
+const processRow = async (
+  row: Row,
+  user: User,
+  surfActivityProvider: SurfActivity
+) => {
   const { date, beach, persons, rating } = row;
 
   // Do something with the row data
@@ -42,17 +46,18 @@ const processRow = async (row: Row, user: User, surfActivityProvider: SurfActivi
   // convert string to array of strings
   let userIds: string[] = [];
   if (persons !== '') {
-  
     const personsArray = persons.split(',');
     // get user ids
     const userProvider = new UserProvider();
-    userIds = await Promise.all(personsArray.map(async (person) => {
-      const user = await userProvider.getByFirstName(person);
-      if (!user) {
-        throw new Error(`Invalid user: ${person}`);
-      }
-      return user.id;
-    }));
+    userIds = await Promise.all(
+      personsArray.map(async (person) => {
+        const user = await userProvider.getByFirstName(person);
+        if (!user) {
+          throw new Error(`Invalid user: ${person}`);
+        }
+        return user.id;
+      })
+    );
   }
   // set rating
   const ratingNumber = parseInt(rating);
@@ -65,9 +70,9 @@ const processRow = async (row: Row, user: User, surfActivityProvider: SurfActivi
       size: 1 + ratingNumber,
       shape: ratingNumber,
       notes: '',
-    }
-  }
-  console.log(newSurfActivity)
+    },
+  };
+  console.log(newSurfActivity);
   // create surf activity
   const surfActivity = await surfActivityProvider.create(newSurfActivity);
   if (!surfActivity) {
@@ -75,13 +80,13 @@ const processRow = async (row: Row, user: User, surfActivityProvider: SurfActivi
   } else {
     console.log(`Surf activity created: ${surfActivity.id}`);
   }
-}
+};
 
 const getUserByFirstName = async (firstName: string) => {
   // get user
 
   const userProvider = new UserProvider();
-  const user = await userProvider.getByFirstName("Mike");
+  const user = await userProvider.getByFirstName('Mike');
   if (!user) {
     throw new Error(`User ${firstName} not found`);
   }
@@ -89,9 +94,7 @@ const getUserByFirstName = async (firstName: string) => {
   const surfActivityProvider = new SurfActivity(user.id);
 
   return { user, surfActivityProvider };
-
-  
-}
+};
 
 const go = async () => {
   const { user, surfActivityProvider } = await getUserByFirstName('Mike');
@@ -125,6 +128,6 @@ const go = async () => {
   }
 
   console.log('CSV file processed successfully.');
-}
+};
 
-  go();
+go();

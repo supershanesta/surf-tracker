@@ -1,48 +1,50 @@
 import { getToken } from 'next-auth/jwt';
-import {
-  NextRequest,
-  NextResponse,
-} from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // pages/api/spots.ts
 import prisma from '@/libs/prisma';
-import {
-  SurfActivityType,
-  SurfRatingType,
-} from '@/types/types';
+import { SurfActivityType, SurfRatingType } from '@/types/types';
 
 export async function GET(req: NextRequest) {
-	if (!req.url) {
-		return NextResponse.json({
-			message: "No URL provided."
-		}, {
-			status: 400,
-		})
-	}
-  const token = await getToken({ req })
-    if (!token?.id) {
-      return NextResponse.json({
-				message: "Unauthorized"
-			}, {
-				status: 401,
-			});
-    }
+  if (!req.url) {
+    return NextResponse.json(
+      {
+        message: 'No URL provided.',
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+  const token = await getToken({ req });
+  if (!token?.id) {
+    return NextResponse.json(
+      {
+        message: 'Unauthorized',
+      },
+      {
+        status: 401,
+      }
+    );
+  }
 
   const userId = token.id;
-	const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(req.url);
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   if (!startDate || !endDate) {
-    return NextResponse.json({
-      message: "Missing startDate or endDate"
-    }, {
-      status: 400,
-    });
+    return NextResponse.json(
+      {
+        message: 'Missing startDate or endDate',
+      },
+      {
+        status: 400,
+      }
+    );
   }
-  console.log(new Date(startDate), new Date(endDate))
-	
-	try {
-		// return the count of each beach for the given time period for this user
+
+  try {
+    // return the count of each beach for the given time period for this user
 
     const surfExperiences = await prisma.surfActivity.findMany({
       where: {
@@ -56,9 +58,7 @@ export async function GET(req: NextRequest) {
           },
         },
       },
-      orderBy: [
-        { date: 'asc' },
-      ],
+      orderBy: [{ date: 'asc' }],
       select: {
         date: true,
         id: true,
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
                 id: true,
                 firstName: true,
                 lastName: true,
-              }
+              },
             },
           },
         },
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
             rating: true,
             size: true,
             shape: true,
-            user: true
+            user: true,
           },
         },
       },
@@ -90,32 +90,33 @@ export async function GET(req: NextRequest) {
 
     // conform to the interface
     const surfExperiencesFormatted = surfExperiences.map((surfExperience) => {
-      const myRating: SurfRatingType | undefined = surfExperience.SurfRating.find((rating) => rating.user.id === userId);
+      const myRating: SurfRatingType | undefined =
+        surfExperience.SurfRating.find((rating) => rating.user.id === userId);
       const surfActivity: SurfActivityType = {
         // pad the month and day with a 0 if needed
         id: surfExperience.id,
         date: surfExperience.date.toISOString().split('T')[0],
         beach: surfExperience.location,
-        users: surfExperience.SurfActivityUsers.filter(({ user }) => user.id !== userId).map(({ user }) => user),
+        users: surfExperience.SurfActivityUsers.filter(
+          ({ user }) => user.id !== userId
+        ).map(({ user }) => user),
         surfRatings: surfExperience.SurfRating,
         mySurfRating: myRating,
         createdBy: surfExperience.createdBy,
-      }
-      console.log('surfActivity', surfActivity)
+      };
       return surfActivity;
     });
-      
 
-
-    
-
-      return NextResponse.json(surfExperiencesFormatted);
-	} catch (error) {
-		console.log(error);
-		return NextResponse.json({
-			message: "Error occurred while getting surf activity frequency"
-		}, {
-			status: 500,
-		})
-	}
+    return NextResponse.json(surfExperiencesFormatted);
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      {
+        message: 'Error occurred while getting surf activity frequency',
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }

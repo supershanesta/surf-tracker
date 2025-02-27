@@ -115,10 +115,8 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 
   const handleChange = (option: any) => {
     setSelectedOption(option);
-    console.log(option);
     onChange(option);
   };
-  console.log(defaultValue);
   return (
     <AsyncSelect
       id={`select-${SelectType[type]}`}

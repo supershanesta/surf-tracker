@@ -8,7 +8,7 @@ import { format, subDays } from 'date-fns';
 import SurfActivityCards from '@/components/cards/SurfActivityCards';
 import MyActivityCharts from '@/components/charts/MyActivityCharts';
 import { SurfActivityType } from '@/types/types';
-import { Button, FormElement, Grid, Input } from '@nextui-org/react';
+import { Button, FormElement, Grid, Input, Spinner } from '@nextui-org/react';
 import ExportSessions from '@/components/exports/ExportSessions';
 
 const SurfExperiences: React.FC = () => {
@@ -26,7 +26,7 @@ const SurfExperiences: React.FC = () => {
   const [filterRating, setFilterRating] = useState<number | undefined>(
     undefined
   );
-  const [data, setData] = useState<SurfActivityType[]>([]);
+  const [data, setData] = useState<SurfActivityType[] | null>(null);
 
   const handleFilterStartDateChange = (e: React.ChangeEvent<FormElement>) => {
     localStorage.setItem('startDate', e.target.value);
@@ -68,11 +68,9 @@ const SurfExperiences: React.FC = () => {
     fetchData();
   }, [startDate, endDate]);
 
-  console.log('data', data);
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-  const filteredSurfExperiences = data.filter((experience) => {
+  console.log(data);
+
+  const filteredSurfExperiences = data?.filter((experience) => {
     //if (filterDate && experience.date !== filterDate) {
     //	return false;
     //}
@@ -135,17 +133,24 @@ const SurfExperiences: React.FC = () => {
           </Grid.Container>
         </div>
       </div>
-      <Grid.Container gap={2} justify="center">
-        <Grid xs={12} md={12}>
-          <MyActivityCharts
-            surfExperiencesData={filteredSurfExperiences}
-            filters={{ startDate, endDate, rating: filterRating }}
-          />
-        </Grid>
-        <Grid xs={12} md={12}>
-          <SurfActivityCards surfExperiences={filteredSurfExperiences} />
-        </Grid>
-      </Grid.Container>
+      {filteredSurfExperiences && (
+        <Grid.Container gap={2} justify="center">
+          <Grid xs={12} md={12}>
+            <MyActivityCharts
+              surfExperiencesData={filteredSurfExperiences}
+              filters={{ startDate, endDate, rating: filterRating }}
+            />
+          </Grid>
+          <Grid xs={12} md={12}>
+            <SurfActivityCards surfExperiences={filteredSurfExperiences} />
+          </Grid>
+        </Grid.Container>
+      )}
+      {!data && (
+        <div className="flex justify-center items-center">
+          <Spinner size="lg" />
+        </div>
+      )}
     </div>
   );
 };
