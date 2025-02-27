@@ -127,9 +127,11 @@ const SurfExperiences: React.FC = () => {
                 Reset Filters
               </Button>
             </Grid>
-            <Grid xs={6} md={6} justify="center">
-              <ExportSessions data={filteredSurfExperiences} />
-            </Grid>
+            {filteredSurfExperiences && (
+              <Grid xs={6} md={6} justify="center">
+                <ExportSessions data={filteredSurfExperiences} />
+              </Grid>
+            )}
           </Grid.Container>
         </div>
       </div>
