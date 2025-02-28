@@ -96,7 +96,7 @@ const SurfExperiences: React.FC = () => {
   return (
     <div>
       <div className="flex justify-start">
-        <div className="grid grid-cols-6 gap-4 p-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 p-4">
           <div className="col-span-1">
             <label htmlFor="startDate" className="block text-sm mb-2">
               Start Date
