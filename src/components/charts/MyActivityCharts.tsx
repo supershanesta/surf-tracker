@@ -1,13 +1,9 @@
 import BeachesPieChart from '@/components/charts/beaches/Pie';
-import DataFrequencySection from '@/components/charts/frequency/Pie';
-import FrequencyDataSection from '@/components/charts/frequency/Data';
-import RatingsPieChart from '@/components/charts/ratings/Pie';
 import { filters, rawData } from '@/components/charts/types';
 import { SurfActivityType } from '@/types/types';
-import { Card, Grid } from '@nextui-org/react';
+import { Grid } from '@nextui-org/react';
 import { SurfPercentage } from '../cards/SurfPercentage';
 import { SurfSessions } from '../cards/SurfSessions';
-import { SurfSubscriptions } from '../cards/SurfSubscriptions';
 import { SurfRatingAmounts } from '../cards/SurfRatingAmounts';
 
 interface SurfChartsProps {
@@ -75,7 +71,6 @@ const MyActivityCharts: React.FC<SurfChartsProps> = ({
 
   const { surfFrequencyChartData, ratingsChartData, beachesChartData } =
     processSurfExperienceData();
-
 
   return (
     <div className="flex flex-col w-full">

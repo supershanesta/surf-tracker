@@ -1,8 +1,5 @@
-'use client';
-
 import { TrendingUp } from 'lucide-react';
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
-import { useEffect, useState } from 'react';
 
 import {
   Card,
@@ -33,32 +30,16 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function SurfPercentage({ data, filters }: ChartProps) {
-  const [chartData, setChartData] = useState<
-    Array<{ surfed: number; skipped: number }>
-  >([]);
-  const [surfPercentage, setSurfPercentage] = useState<number>(0);
-  const [total, setTotal] = useState<number>(0);
-  const [surfed, setSurfed] = useState<number>(0);
-
-  useEffect(() => {
-    const totalDays = getDatesInRange(
-      filters.startDate,
-      filters.endDate
-    ).length;
-    const surfedDays = data.length;
-    const skippedDays = totalDays - surfedDays;
-    const percentage = Math.round((surfedDays / totalDays) * 100);
-
-    setTotal(totalDays);
-    setSurfed(surfedDays);
-    setSurfPercentage(percentage);
-    setChartData([
-      {
-        surfed: surfedDays,
-        skipped: skippedDays,
-      },
-    ]);
-  }, [data, filters.startDate, filters.endDate]);
+  const totalDays = getDatesInRange(filters.startDate, filters.endDate).length;
+  const surfedDays = data.length;
+  const skippedDays = totalDays - surfedDays;
+  const percentage = Math.round((surfedDays / totalDays) * 100);
+  const chartData = [
+    {
+      surfed: surfedDays,
+      skipped: skippedDays,
+    },
+  ];
 
   return (
     <Card className="flex flex-col w-full">
@@ -95,7 +76,7 @@ export function SurfPercentage({ data, filters }: ChartProps) {
                             y={(viewBox.cy || 0) - 16}
                             className="fill-foreground text-2xl font-bold"
                           >
-                            {surfPercentage}%
+                            {percentage}%
                           </tspan>
                           <tspan
                             x={viewBox.cx}
@@ -130,10 +111,11 @@ export function SurfPercentage({ data, filters }: ChartProps) {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          {surfed} days surfed this period <TrendingUp className="h-4 w-4" />
+          {surfedDays} days surfed this period{' '}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Out of {total} total days
+          Out of {totalDays} total days
         </div>
       </CardFooter>
     </Card>

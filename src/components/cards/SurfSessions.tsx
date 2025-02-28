@@ -1,5 +1,3 @@
-'use client';
-
 import { Line, LineChart, XAxis, YAxis } from 'recharts';
 import { SurfActivityType } from '@/types/types';
 import {
@@ -9,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import { ChartConfig } from '@/components/ui/chart';
 import { ResponsiveContainer } from 'recharts';
 
 interface SurfSessionsProps {
