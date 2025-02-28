@@ -59,9 +59,7 @@ export function SurfSessions({ data, filters }: SurfSessionsProps) {
   return (
     <Card className="flex flex-col w-full h-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-normal">
-          Total Surfing Sessions
-        </CardTitle>
+        <CardTitle>Total Surfing Sessions</CardTitle>
       </CardHeader>
       <CardContent className="pb-4">
         <div className="text-2xl font-bold">{totalSessions}</div>
