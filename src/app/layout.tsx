@@ -1,35 +1,38 @@
 import './globals.css';
+import { headers } from 'next/headers';
+import { getServerSession } from 'next-auth';
 
 import { ModalProvider } from '@/components/context/ModalContext';
 import { SnackBarProvider } from '@/components/context/SnackBarContext';
-import NavigationBar from '@/components/layouts/Navbar';
+import { NavigationMenuDemo } from '@/components/layouts/Navbar2';
+import { authOptions } from '@/libs/auth';
 
 import { NextAuthProvider } from '../providers/NextAuthProvider';
 
 export const metadata = {
-	title: "Surf Tracker",
-	description: "Track your surf sessions and improve your skills",
+  title: 'Surf Tracker',
+  description: 'Track your surf sessions and improve your skills',
 };
 
-export default function RootLayout({
-	children,
-	session,
+export default async function RootLayout({
+  children,
 }: {
-	children: React.ReactNode;
-	session: any;
+  children: React.ReactNode;
 }) {
-	return (
-		<html lang="en">
-			<body>
-				<NextAuthProvider>
-					<ModalProvider>
-						<SnackBarProvider>
-							<NavigationBar title="Title" />
-							<div className="p-8">{children}</div>
-						</SnackBarProvider>
-					</ModalProvider>
-				</NextAuthProvider>
-			</body>
-		</html>
-	);
+  const session = await getServerSession(authOptions);
+
+  return (
+    <html lang="en">
+      <body>
+        <NextAuthProvider session={session}>
+          <ModalProvider>
+            <SnackBarProvider>
+              <NavigationMenuDemo session={session} />
+              <div className="p-8">{children}</div>
+            </SnackBarProvider>
+          </ModalProvider>
+        </NextAuthProvider>
+      </body>
+    </html>
+  );
 }

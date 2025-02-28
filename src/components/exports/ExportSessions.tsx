@@ -1,5 +1,5 @@
-import {SurfActivityType} from "@/types/types";
-import {Button} from "@nextui-org/react";
+import { SurfActivityType } from '@/types/types';
+import { Button } from '@components/ui/button';
 
 interface flattenSurfActivityData {
   id: string;
@@ -13,12 +13,16 @@ interface flattenSurfActivityData {
   createdBy: string;
 }
 
-const flattenSurfActivityData = (data: SurfActivityType[]): flattenSurfActivityData[] => {
+const flattenSurfActivityData = (
+  data: SurfActivityType[]
+): flattenSurfActivityData[] => {
   // Flatten each surf activity into rows that can be converted into CSV format
   return data.map((activity) => {
     // For properties like users, surfRatings, and mySurfRating, you'll want to extract relevant details
     // For simplicity, this example only extracts some fields, but you can adjust it as needed
-    const users = activity.users.map((user) => `${user.firstName} ${user.lastName}`).join(", ");
+    const users = activity.users
+      .map((user) => `${user.firstName} ${user.lastName}`)
+      .join(', ');
     const mySurfRating = activity.mySurfRating;
 
     // Return a flat representation of the activity
@@ -27,10 +31,10 @@ const flattenSurfActivityData = (data: SurfActivityType[]): flattenSurfActivityD
       date: activity.date,
       beachName: activity.beach.name,
       users,
-      rating: mySurfRating?.rating || "N/A",
-      size: mySurfRating?.size || "N/A",
-      shape: mySurfRating?.shape || "N/A",
-      notes: mySurfRating?.notes || "N/A",
+      rating: mySurfRating?.rating || 'N/A',
+      size: mySurfRating?.size || 'N/A',
+      shape: mySurfRating?.shape || 'N/A',
+      notes: mySurfRating?.notes || 'N/A',
       createdBy: `${activity.createdBy.firstName} ${activity.createdBy.lastName}`,
     };
   });
@@ -40,17 +44,17 @@ const convertToCSV = (flatData: flattenSurfActivityData[]): string => {
   const csvRows: string[] = [];
   // Assuming headers are statically known and match the flattenSurfActivityData keys
   const headers: (keyof flattenSurfActivityData)[] = [
-    "id",
-    "date",
-    "beachName",
-    "users",
-    "rating",
-    "size",
-    "shape",
-    "notes",
-    "createdBy",
+    'id',
+    'date',
+    'beachName',
+    'users',
+    'rating',
+    'size',
+    'shape',
+    'notes',
+    'createdBy',
   ];
-  csvRows.push(headers.join(",")); // Add headers row
+  csvRows.push(headers.join(',')); // Add headers row
 
   flatData.forEach((row) => {
     // Map each header to its corresponding value in the row
@@ -59,12 +63,12 @@ const convertToCSV = (flatData: flattenSurfActivityData[]): string => {
       // This ensures the value is treated as a string or whatever type is appropriate
       const value = row[header];
       // Convert undefined values to an empty string, and stringify others
-      return JSON.stringify(value ?? "");
+      return JSON.stringify(value ?? '');
     });
-    csvRows.push(values.join(","));
+    csvRows.push(values.join(','));
   });
 
-  return csvRows.join("\n");
+  return csvRows.join('\n');
 };
 
 const exportToCSV = (data: SurfActivityType[]) => {
@@ -73,16 +77,16 @@ const exportToCSV = (data: SurfActivityType[]) => {
   // Convert flattened data to CSV
   const csvString = convertToCSV(flatData);
 
-  const startDate = localStorage.getItem("startDate");
-  const endDate = localStorage.getItem("endDate");
+  const startDate = localStorage.getItem('startDate');
+  const endDate = localStorage.getItem('endDate');
 
   // Create a Blob from the CSV String
-  const blob = new Blob([csvString], {type: "text/csv;charset=utf-8;"});
+  const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
 
   // Create a temporary link to trigger the download
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", `surf_activities-${startDate}-${endDate}.csv`); // Name of the file to be downloaded
+  link.setAttribute('download', `surf_activities-${startDate}-${endDate}.csv`); // Name of the file to be downloaded
   document.body.appendChild(link); // Append to document to make it work on Firefox
 
   // Trigger the download
@@ -96,9 +100,9 @@ interface Props {
   data: SurfActivityType[];
 }
 
-const ExportSessions: React.FC<Props> = ({data}) => {
+const ExportSessions: React.FC<Props> = ({ data }) => {
   return (
-    <Button size="sm" color="secondary" onClick={() => exportToCSV(data)}>
+    <Button color="secondary" onClick={() => exportToCSV(data)}>
       Export to CSV
     </Button>
   );

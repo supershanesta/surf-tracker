@@ -7,8 +7,10 @@ import { format, subDays } from 'date-fns';
 
 import SurfActivityCards from '@/components/cards/SurfActivityCards';
 import MyActivityCharts from '@/components/charts/MyActivityCharts';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { SurfActivityType } from '@/types/types';
-import { Button, FormElement, Grid, Input, Spinner } from '@nextui-org/react';
 import ExportSessions from '@/components/exports/ExportSessions';
 
 const SurfExperiences: React.FC = () => {
@@ -27,18 +29,23 @@ const SurfExperiences: React.FC = () => {
     undefined
   );
   const [data, setData] = useState<SurfActivityType[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleFilterStartDateChange = (e: React.ChangeEvent<FormElement>) => {
+  const handleFilterStartDateChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     localStorage.setItem('startDate', e.target.value);
     setStartDate(e.target.value);
   };
 
-  const handleFilterEndDateChange = (e: React.ChangeEvent<FormElement>) => {
+  const handleFilterEndDateChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     localStorage.setItem('endDate', e.target.value);
     setEndDate(e.target.value);
   };
 
-  const handleFilterRatingChange = (e: React.ChangeEvent<FormElement>) => {
+  const handleFilterRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterRating(Number(e.target.value) || undefined);
   };
 
@@ -63,6 +70,8 @@ const SurfExperiences: React.FC = () => {
         setData(responseData);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -86,71 +95,82 @@ const SurfExperiences: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-center ">
-        <div className="md:w-1/3">
-          <Grid.Container id="filters" gap={2} justify="center">
-            <Grid xs={6} md={6} justify="center">
-              <Input
-                labelPlaceholder="Start Date"
-                type="date"
-                id="startDate"
-                value={startDate}
-                onChange={handleFilterStartDateChange}
-                fullWidth
-              />
-            </Grid>
-            <Grid xs={6} md={6} justify="center">
-              <Input
-                labelPlaceholder="End Date"
-                type="date"
-                id="endDate"
-                value={endDate}
-                onChange={handleFilterEndDateChange}
-                fullWidth
-              />
-            </Grid>
+      <div className="flex justify-start">
+        <div className="grid grid-cols-6 gap-4 p-4">
+          <div className="col-span-1">
+            <label htmlFor="startDate" className="block text-sm mb-2">
+              Start Date
+            </label>
+            <Input
+              type="date"
+              id="startDate"
+              value={startDate}
+              onChange={handleFilterStartDateChange}
+              className="w-full"
+            />
+          </div>
+          <div className="col-span-1">
+            <label htmlFor="endDate" className="block text-sm mb-2">
+              End Date
+            </label>
+            <Input
+              type="date"
+              id="endDate"
+              value={endDate}
+              onChange={handleFilterEndDateChange}
+              className="w-full"
+            />
+          </div>
 
-            <Grid xs={6} md={6} justify="center">
-              <Input
-                type="number"
-                labelPlaceholder="Rating"
-                id="filterRating"
-                min={1}
-                max={4}
-                value={filterRating}
-                onChange={handleFilterRatingChange}
-                fullWidth
-              />
-            </Grid>
-            <Grid xs={6} md={6} justify="center">
-              <Button size="sm" onClick={handleFilterReset}>
-                Reset Filters
-              </Button>
-            </Grid>
-            {filteredSurfExperiences && (
-              <Grid xs={6} md={6} justify="center">
-                <ExportSessions data={filteredSurfExperiences} />
-              </Grid>
-            )}
-          </Grid.Container>
+          <div className="col-span-1">
+            <label htmlFor="filterRating" className="block text-sm mb-2">
+              Rating
+            </label>
+            <Input
+              type="number"
+              id="filterRating"
+              min={1}
+              max={4}
+              value={filterRating}
+              onChange={handleFilterRatingChange}
+              className="w-full"
+            />
+          </div>
+          <div className="col-span-1 flex items-end">
+            <Button
+              variant="outline"
+              onClick={handleFilterReset}
+              className="w-full"
+            >
+              Reset Filters
+            </Button>
+          </div>
+
+          {filteredSurfExperiences && (
+            <div className="col-span-1 flex items-end">
+              <ExportSessions data={filteredSurfExperiences} />
+            </div>
+          )}
         </div>
       </div>
+
       {filteredSurfExperiences && (
-        <Grid.Container gap={2} justify="center">
-          <Grid xs={12} md={12}>
+        <div className="grid grid-cols-1 gap-8 mt-8">
+          <div className="col-span-1">
             <MyActivityCharts
               surfExperiencesData={filteredSurfExperiences}
               filters={{ startDate, endDate, rating: filterRating }}
             />
-          </Grid>
-          <Grid xs={12} md={12}>
+          </div>
+          <div className="col-span-1">
             <SurfActivityCards surfExperiences={filteredSurfExperiences} />
-          </Grid>
-        </Grid.Container>
+          </div>
+        </div>
       )}
-      {!data && (
-        <div className="flex justify-center items-center">
-          <Spinner size="lg" />
+
+      {isLoading && (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       )}
     </div>

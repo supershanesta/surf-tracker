@@ -1,103 +1,52 @@
+'use client';
+
 import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 import {
-	Avatar,
-	Dropdown,
-	Link,
-	Navbar,
-	Text,
-} from '@nextui-org/react';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 interface AvatarDropDownProps {
-	user: User;
+  user: User;
 }
 
-const collapseItems = [
-	"Profile",
-	"Dashboard",
-	"Activity",
-	"My Settings",
-	"Log Out",
-];
-
-const AvatarDropDown: React.FC<AvatarDropDownProps> = ({ user }) => {
-	return (
-		<>
-			<Navbar.Content
-				css={{
-					"@xs": {
-						w: "12%",
-						jc: "flex-end",
-					},
-				}}
-			>
-				<Dropdown placement="bottom-right">
-					<Navbar.Item>
-						<Dropdown.Trigger>
-							<Avatar
-								bordered
-								as="button"
-								color="gradient"
-								textColor="white"
-								size="md"
-								text={`${user.firstName[0]}${user.lastName[0]}`}
-							/>
-						</Dropdown.Trigger>
-					</Navbar.Item>
-					<Dropdown.Menu
-						aria-label="User menu actions"
-						color="secondary"
-						onAction={(actionKey) => {
-							if (actionKey === "logout") {
-								signOut();
-							}
-						}}
-					>
-						<Dropdown.Item key="profile" css={{ height: "$18" }}>
-							<Text b color="inherit" css={{ d: "flex" }}>
-								{user.firstName} {user.lastName}
-							</Text>
-							<Text b color="inherit" css={{ d: "flex" }}>
-								{user.email}
-							</Text>
-						</Dropdown.Item>
-						<Dropdown.Item key="settings" withDivider>
-							<Link href="/settings">My Settings</Link>
-						</Dropdown.Item>
-						<Dropdown.Item key="friends" withDivider>
-							<Link href="/friends">Friends</Link>
-						</Dropdown.Item>
-						<Dropdown.Item key="logout" withDivider color="error">
-							Log Out
-						</Dropdown.Item>
-					</Dropdown.Menu>
-				</Dropdown>
-			</Navbar.Content>
-			<Navbar.Collapse>
-				{collapseItems.map((item, index) => (
-					<Navbar.CollapseItem
-						key={item}
-						activeColor="secondary"
-						css={{
-							color: index === collapseItems.length - 1 ? "$error" : "",
-						}}
-						isActive={index === 2}
-					>
-						<Link
-							color="inherit"
-							css={{
-								minWidth: "100%",
-							}}
-							href="#"
-						>
-							{item}
-						</Link>
-					</Navbar.CollapseItem>
-				))}
-			</Navbar.Collapse>
-		</>
-	);
-};
-
-export default AvatarDropDown;
+export default function AvatarDropDown({ user }: AvatarDropDownProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Avatar>
+          <AvatarFallback className="bg-gradient-to-br from-primary to-primary/50 text-primary-foreground">
+            {`${user.firstName?.[0]}${user.lastName?.[0]}`}
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>
+          <div className="flex flex-col space-y-1">
+            <p>{`${user.firstName} ${user.lastName}`}</p>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/settings">My Settings</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/friends">Friends</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="text-red-600" onClick={() => signOut()}>
+          Log Out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
