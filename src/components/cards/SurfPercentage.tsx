@@ -55,10 +55,10 @@ export function SurfPercentage({ data, filters }: ChartProps) {
           >
             <RadialBarChart
               data={chartData}
-              endAngle={180}
+              endAngle={0}
               innerRadius={80}
               outerRadius={130}
-              startAngle={0}
+              startAngle={180}
               cy="90%"
             >
               <ChartTooltip

@@ -20,7 +20,7 @@ sudo tee /etc/nginx/sites-available/surf-tracker << EOF
 server {
     listen 80;
     server_name surf.shanedrice.com;
-    return 301 \$scheme://www.surf.shanedrice.com\$request_uri;
+    return 302 https://www.surf.shanedrice.com$request_uri;
 }
 
 # Main server block for www
