@@ -2,12 +2,14 @@
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { Button, Card, Grid, Input, Text } from '@nextui-org/react';
+import { Card, Grid, Input, Text, Button } from '@nextui-org/react';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 export default function SignIn() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,6 +40,27 @@ export default function SignIn() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsGoogleLoading(true);
+      setError(null);
+      const result = await signIn('google', {
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Failed to sign in with Google');
+      } else {
+        router.push('/surf-session');
+        router.refresh();
+      }
+    } catch (error) {
+      setError('An error occurred during Google sign in');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-[80vh] px-4 py-8">
       <Grid.Container gap={2} justify="center">
@@ -47,6 +70,7 @@ export default function SignIn() {
               <Text h2 className="text-center my-6">
                 Sign In
               </Text>
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <Input
                   required
@@ -76,6 +100,17 @@ export default function SignIn() {
                 >
                   {isLoading ? 'Signing in...' : 'Sign In'}
                 </Button>
+                <div className="flex items-center my-4">
+                  <div className="flex-1 border-t border-gray-300"></div>
+                  <Text className="mx-4 text-gray-500">or</Text>
+                  <div className="flex-1 border-t border-gray-300"></div>
+                </div>
+                <div className="flex justify-center">
+                  <GoogleSignInButton
+                    onClick={handleGoogleSignIn}
+                    isLoading={isGoogleLoading}
+                  />
+                </div>
               </form>
             </div>
           </Card>

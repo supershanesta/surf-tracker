@@ -77,8 +77,6 @@ const SurfExperiences: React.FC = () => {
     fetchData();
   }, [startDate, endDate]);
 
-  console.log(data);
-
   const filteredSurfExperiences = data?.filter((experience) => {
     //if (filterDate && experience.date !== filterDate) {
     //	return false;

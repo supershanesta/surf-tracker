@@ -184,6 +184,8 @@ model User {
   phoneNumber         String?
   password            String?
   admin               Boolean?
+  image               String?
+  emailVerified       DateTime?           @map("email_verified")
   surfActivity        SurfActivityUsers[]
   mySurfActivity      SurfActivity[]
   sessions            Session[]

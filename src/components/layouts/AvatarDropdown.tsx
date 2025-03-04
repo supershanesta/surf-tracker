@@ -1,5 +1,3 @@
-'use client';
-
 import { User } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
@@ -12,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface AvatarDropDownProps {
   user: User;
@@ -23,7 +21,15 @@ export default function AvatarDropDown({ user }: AvatarDropDownProps) {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarFallback className="bg-gradient-to-br from-primary to-primary/50 text-primary-foreground">
+          <AvatarImage
+            src={user.image || ''}
+            className="h-full w-full object-cover"
+            alt={`${user.firstName} ${user.lastName}`}
+          />
+          <AvatarFallback
+            delayMs={600}
+            className="bg-gradient-to-br from-primary to-primary/50 text-primary-foreground"
+          >
             {`${user.firstName?.[0]}${user.lastName?.[0]}`}
           </AvatarFallback>
         </Avatar>

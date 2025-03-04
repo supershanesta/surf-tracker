@@ -55,6 +55,9 @@ module.exports = {
           5: 'hsl(var(--chart-5))',
         },
       },
+      fontFamily: {
+        roboto: ['var(--font-roboto)', 'sans-serif'],
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
