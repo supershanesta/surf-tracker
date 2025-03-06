@@ -2,6 +2,8 @@ export interface UserType {
   id: string;
   firstName: string;
   lastName: string;
+  email?: string;
+  image?: string;
 }
 
 export interface SurfRatingType {

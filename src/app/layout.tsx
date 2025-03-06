@@ -28,7 +28,7 @@ export default async function RootLayout({
           <ModalProvider>
             <SnackBarProvider>
               <NavigationMenuDemo session={session} />
-              <div className="p-8">{children}</div>
+              <div className="py-8 px-2">{children}</div>
             </SnackBarProvider>
           </ModalProvider>
         </NextAuthProvider>

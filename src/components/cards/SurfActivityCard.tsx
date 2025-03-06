@@ -1,9 +1,12 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Setting } from 'react-iconly';
+import { Settings } from 'lucide-react';
 
 import { SurfActivityType } from '@/types/types';
-import { Badge, Button, Card, Grid, Textarea } from '@nextui-org/react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 
 import shellSelected from '../../../public/shell-selected.svg';
 
@@ -15,39 +18,33 @@ const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
   const { id, date, beach, users, mySurfRating } = experience;
   const router = useRouter();
   return (
-    <Grid md={3}>
+    <div className="w-full">
       <Card>
-        <Card.Header>
-          <Grid.Container gap={1} justify="center">
-            <Grid xs={8} justify="flex-start">
-              {date}
-            </Grid>
-            <Grid xs={4} justify="flex-end">
-              <div onClick={() => router.push(`/surf-session/${id}/edit`)}>
-                <Setting />
+        <CardHeader>
+          <div className="flex flex-col gap-1">
+            <div className="flex justify-between items-center">
+              <div className="w-2/3">{date}</div>
+              <div className="w-1/3 flex justify-end">
+                <div onClick={() => router.push(`/surf-session/${id}/edit`)}>
+                  <Settings className="h-5 w-5" />
+                </div>
               </div>
-            </Grid>
-            <Grid xs={12} justify="center">
-              {beach.name}
-            </Grid>
-            <Grid xs={12}>
+            </div>
+            <div className="text-center">{beach.name}</div>
+            <div className="flex flex-wrap gap-1">
               {users.map((user) => (
-                <Badge key={user.id} size="xs" color="primary">
+                <Badge key={user.id} variant="default">
                   {user.firstName} {user.lastName}
                 </Badge>
               ))}
-            </Grid>
-          </Grid.Container>
-        </Card.Header>
-        <Card.Body>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
           {mySurfRating ? (
-            <Grid.Container
-              gap={0}
-              justify="center"
-              className="border border-solid rounded-md"
-            >
-              <Grid.Container xs={12} justify="center" className="!p-1">
-                <Grid xs={12} justify="flex-end">
+            <div className="border rounded-md p-1">
+              <div className="flex flex-col gap-1">
+                <div className="flex justify-end">
                   <div
                     onClick={() =>
                       router.push(
@@ -55,50 +52,47 @@ const SurfActivityCard: React.FC<SurfActivityCardProps> = ({ experience }) => {
                       )
                     }
                   >
-                    <Setting />
+                    <Settings className="h-5 w-5" />
                   </div>
-                </Grid>
-                <Grid xs={6} justify="center">
-                  Size: {mySurfRating.size}
-                </Grid>
-                <Grid xs={6} justify="center">
-                  Shape: {mySurfRating.shape}
-                </Grid>
-                <Grid xs={12} justify="center">
-                  <div className="flex items-center">Rating: </div>
+                </div>
+                <div className="grid grid-cols-2 gap-1">
+                  <div className="text-center">Size: {mySurfRating.size}</div>
+                  <div className="text-center">Shape: {mySurfRating.shape}</div>
+                </div>
+                <div className="flex items-center justify-center gap-1">
+                  <div>Rating: </div>
                   <div className="relative">
                     <Image alt="shell" src={shellSelected} />
                     <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-20%]">
                       {mySurfRating.rating}
                     </span>
                   </div>
-                </Grid>
+                </div>
                 {mySurfRating.notes && (
-                  <Grid xs={12} justify="center">
+                  <div className="w-full">
                     <Textarea
                       id="notes"
                       name="notes"
-                      readOnly
-                      fullWidth={true}
-                      initialValue={mySurfRating.notes}
+                      disabled
+                      value={mySurfRating.notes}
                     />
-                  </Grid>
+                  </div>
                 )}
-              </Grid.Container>
-            </Grid.Container>
+              </div>
+            </div>
           ) : (
-            <Grid xs={12} justify="center">
+            <div className="flex justify-center">
               <Button
-                ghost
+                variant="ghost"
                 onClick={() => router.push(`/surf-session/${id}/rating`)}
               >
                 Add your rating
               </Button>
-            </Grid>
+            </div>
           )}
-        </Card.Body>
+        </CardContent>
       </Card>
-    </Grid>
+    </div>
   );
 };
 

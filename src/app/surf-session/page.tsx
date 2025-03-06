@@ -7,11 +7,8 @@ import { format, subDays } from 'date-fns';
 
 import SurfActivityCards from '@/components/cards/SurfActivityCards';
 import MyActivityCharts from '@/components/charts/MyActivityCharts';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { SurfActivityType } from '@/types/types';
-import ExportSessions from '@/components/exports/ExportSessions';
+import { SurfSessionFilters } from '@/components/pageComponents/surfSessions/Filters';
 
 const SurfExperiences: React.FC = () => {
   const [startDate, setStartDate] = useState(
@@ -30,6 +27,22 @@ const SurfExperiences: React.FC = () => {
   );
   const [data, setData] = useState<SurfActivityType[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkMobile();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleFilterStartDateChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -91,65 +104,49 @@ const SurfExperiences: React.FC = () => {
     return true;
   });
 
-  return (
-    <div>
-      <div className="flex justify-start">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 p-4">
-          <div className="col-span-1">
-            <label htmlFor="startDate" className="block text-sm mb-2">
-              Start Date
-            </label>
-            <Input
-              type="date"
-              id="startDate"
-              value={startDate}
-              onChange={handleFilterStartDateChange}
-              className="w-full"
-            />
-          </div>
-          <div className="col-span-1">
-            <label htmlFor="endDate" className="block text-sm mb-2">
-              End Date
-            </label>
-            <Input
-              type="date"
-              id="endDate"
-              value={endDate}
-              onChange={handleFilterEndDateChange}
-              className="w-full"
-            />
-          </div>
-
-          <div className="col-span-1">
-            <label htmlFor="filterRating" className="block text-sm mb-2">
-              Rating
-            </label>
-            <Input
-              type="number"
-              id="filterRating"
-              min={1}
-              max={4}
-              value={filterRating}
-              onChange={handleFilterRatingChange}
-              className="w-full"
-            />
-          </div>
-          <div className="col-span-1 flex items-end">
-            <Button
-              variant="outline"
-              onClick={handleFilterReset}
-              className="w-full"
-            >
-              Reset Filters
-            </Button>
-          </div>
-
+  if (!isMobile) {
+    return (
+      <div className="grid grid-cols-4 gap-8">
+        <div className="col-span-1 flex flex-col gap-4">
           {filteredSurfExperiences && (
-            <div className="col-span-1 flex items-end">
-              <ExportSessions data={filteredSurfExperiences} />
-            </div>
+            <MyActivityCharts
+              surfExperiencesData={filteredSurfExperiences}
+              filters={{ startDate, endDate, rating: filterRating }}
+            />
           )}
         </div>
+        <div className="col-span-3">
+          <SurfSessionFilters
+            startDate={startDate}
+            endDate={endDate}
+            filterRating={filterRating}
+            filteredSurfExperiences={filteredSurfExperiences}
+            handleFilterStartDateChange={handleFilterStartDateChange}
+            handleFilterEndDateChange={handleFilterEndDateChange}
+            handleFilterRatingChange={handleFilterRatingChange}
+            handleFilterReset={handleFilterReset}
+          />
+          {filteredSurfExperiences && (
+            <SurfActivityCards surfExperiences={filteredSurfExperiences} />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="grid grid-cols-2 gap-8 mt-8">
+        <SurfSessionFilters
+          startDate={startDate}
+          endDate={endDate}
+          filterRating={filterRating}
+          filteredSurfExperiences={filteredSurfExperiences}
+          handleFilterStartDateChange={handleFilterStartDateChange}
+          handleFilterEndDateChange={handleFilterEndDateChange}
+          handleFilterRatingChange={handleFilterRatingChange}
+          handleFilterReset={handleFilterReset}
+        />
       </div>
 
       {filteredSurfExperiences && (

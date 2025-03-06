@@ -70,8 +70,6 @@ const SurfRating: React.FC = () => {
         }
       );
 
-      console.log('RESPONSE', response);
-
       if (!response.ok) {
         openSnackBar('error', 'Error Creating Surf Rating');
         throw new Error('Failed to create surf activity');

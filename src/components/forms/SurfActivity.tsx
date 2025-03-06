@@ -99,7 +99,13 @@ const SurfActivityForm: React.FC<FormProps> = ({
   const handleUsersChange = (selectedOption: User[] | null) => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      users: selectedOption || [],
+      users: (selectedOption || []).map((user) => ({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        image: user.image || undefined,
+      })),
     }));
   };
 

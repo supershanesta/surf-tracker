@@ -1,7 +1,6 @@
 import BeachesPieChart from '@/components/charts/beaches/Pie';
 import { filters, rawData } from '@/components/charts/types';
 import { SurfActivityType } from '@/types/types';
-import { Grid } from '@nextui-org/react';
 import { SurfPercentage } from '../cards/SurfPercentage';
 import { SurfSessions } from '../cards/SurfSessions';
 import { SurfRatingAmounts } from '../cards/SurfRatingAmounts';
@@ -73,21 +72,21 @@ const MyActivityCharts: React.FC<SurfChartsProps> = ({
     processSurfExperienceData();
 
   return (
-    <div className="flex flex-col w-full">
-      <Grid.Container gap={2} justify="center">
-        <Grid xs={12} md={3}>
+    <div className="w-full">
+      <div className="grid grid-cols-1 gap-4">
+        <div className="col-span-1">
           <SurfPercentage data={surfFrequencyChartData} filters={filters} />
-        </Grid>
-        <Grid xs={12} md={3}>
+        </div>
+        <div className="col-span-1">
           <SurfSessions data={surfExperiencesData} filters={filters} />
-        </Grid>
-        <Grid xs={12} md={3}>
+        </div>
+        <div className="col-span-1">
           <BeachesPieChart data={beachesChartData} width={250} height={250} />
-        </Grid>
-        <Grid xs={12} md={3}>
+        </div>
+        <div className="col-span-1">
           <SurfRatingAmounts data={ratingsChartData} />
-        </Grid>
-      </Grid.Container>
+        </div>
+      </div>
     </div>
   );
 };

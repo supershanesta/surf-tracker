@@ -63,7 +63,14 @@ export async function GET(req: NextRequest) {
         date: true,
         id: true,
         location: true,
-        createdBy: true,
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            image: true,
+          },
+        },
         SurfActivityUsers: {
           select: {
             user: {
@@ -71,6 +78,7 @@ export async function GET(req: NextRequest) {
                 id: true,
                 firstName: true,
                 lastName: true,
+                image: true,
               },
             },
           },
@@ -82,16 +90,37 @@ export async function GET(req: NextRequest) {
             rating: true,
             size: true,
             shape: true,
-            user: true,
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                image: true,
+              },
+            },
           },
         },
       },
     });
 
+    // Transform user data to match UserType interface
+    const transformUser = (user: any) => ({
+      ...user,
+      image: user.image || undefined,
+    });
+
     // conform to the interface
     const surfExperiencesFormatted = surfExperiences.map((surfExperience) => {
-      const myRating: SurfRatingType | undefined =
-        surfExperience.SurfRating.find((rating) => rating.user.id === userId);
+      const rawMyRating = surfExperience.SurfRating.find(
+        (rating) => rating.user.id === userId
+      );
+      const myRating: SurfRatingType | undefined = rawMyRating
+        ? {
+            ...rawMyRating,
+            user: transformUser(rawMyRating.user),
+          }
+        : undefined;
+
       const surfActivity: SurfActivityType = {
         // pad the month and day with a 0 if needed
         id: surfExperience.id,
@@ -99,10 +128,13 @@ export async function GET(req: NextRequest) {
         beach: surfExperience.location,
         users: surfExperience.SurfActivityUsers.filter(
           ({ user }) => user.id !== userId
-        ).map(({ user }) => user),
-        surfRatings: surfExperience.SurfRating,
+        ).map(({ user }) => transformUser(user)),
+        surfRatings: surfExperience.SurfRating.map((rating) => ({
+          ...rating,
+          user: transformUser(rating.user),
+        })),
         mySurfRating: myRating,
-        createdBy: surfExperience.createdBy,
+        createdBy: transformUser(surfExperience.createdBy),
       };
       return surfActivity;
     });

@@ -73,41 +73,59 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (existingFriendship) {
+    if (existingFriendship && existingFriendship.status === 'PENDING') {
       return NextResponse.json(
         { message: 'Friendship request already exists' },
         { status: 400 }
       );
     }
 
-    // Create new friendship request
-    const friendship = await prisma.friendship.create({
-      data: {
-        fromUserId: token.id,
-        toUserId,
-        status: 'PENDING',
-      },
-      include: {
-        fromUser: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-          },
-        },
-        toUser: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-          },
-        },
-      },
-    });
+    if (existingFriendship && existingFriendship.status === 'ACCEPTED') {
+      return NextResponse.json(
+        { message: 'Friendship already exists' },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json({ friendship });
+    if (existingFriendship) {
+      const friendship = await prisma.friendship.update({
+        where: { id: existingFriendship.id },
+        data: { status: 'PENDING' },
+      });
+
+      return NextResponse.json({ friendship });
+    }
+
+    if (!existingFriendship) {
+      // Create new friendship request
+      const friendship = await prisma.friendship.create({
+        data: {
+          fromUserId: token.id,
+          toUserId,
+          status: 'PENDING',
+        },
+        include: {
+          fromUser: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          toUser: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      return NextResponse.json({ friendship });
+    }
   } catch (error) {
     console.error('Error creating friend request:', error);
     return NextResponse.json(
