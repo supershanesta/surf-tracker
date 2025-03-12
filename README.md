@@ -50,9 +50,10 @@ Surf Tracker is a full-stack Next.js application that allows users to:
 
 ## Screenshots
 
-![Dashboard View](![image](https://github.com/user-attachments/assets/f216e891-959d-44e2-8d95-d03f9659f973)
+![Dashboard View](https://github.com/user-attachments/assets/f216e891-959d-44e2-8d95-d03f9659f973)
 ![Session Details](https://github.com/supershanesta/surf-tracker/assets/20649126/ffda86e2-ea0e-4b90-a7d3-674da59ad843)
-![Analytics](https://github.com/supershanesta/surf-tracker/assets/20649126/bbae2b97-65d3-4d31-adaf-5268addf5a87)
+![Analytics](https://github.com/user-attachments/assets/81e9eb1f-6f9c-4290-87f5-50aa15e4aee3)
+
 
 ## Development
 
