@@ -28,7 +28,7 @@ const CommunityPage = () => {
     data: sessionsData,
     error: sessionsError,
     loading: sessionsLoading,
-  } = useRequest<RecentSession[]>({ url: '/api/users' });
+  } = useRequest<RecentSession[]>({ url: '/api/users/search' });
 
   const filteredSessions = sessionsData?.filter((session) => {
     const fullName =

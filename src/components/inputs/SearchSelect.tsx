@@ -48,7 +48,7 @@ const SelectTypeDetails: SelectTypeDetail = {
   [SelectType.User]: {
     labelColumn: (option: User) => `${option.firstName} ${option.lastName}`,
     valueColumn: 'id',
-    query: '/api/users',
+    query: '/api/users/search',
     noOptionsMessage: 'No users found',
     responseKey: 'users',
     multiselect: false,
