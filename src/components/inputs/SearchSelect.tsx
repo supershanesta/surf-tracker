@@ -51,7 +51,7 @@ const SelectTypeDetails: SelectTypeDetail = {
     query: '/api/users/search',
     noOptionsMessage: 'No users found',
     responseKey: 'users',
-    multiselect: false,
+    multiselect: true,
   },
 };
 

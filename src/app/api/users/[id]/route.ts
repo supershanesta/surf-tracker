@@ -20,10 +20,14 @@ export async function GET(
         lastName: true,
         email: true,
         surfActivity: {
-          take: 1,
+          take: 3,
+          orderBy: {
+            surfActivity: {
+              date: 'desc',
+            },
+          },
           select: {
             id: true,
-
             surfActivity: {
               select: {
                 date: true,
