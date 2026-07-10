@@ -1,43 +1,37 @@
 // lib/prisma.ts
 import { PrismaClient } from '@prisma/client';
 
-// Add this type declaration
 declare global {
   var prisma: PrismaClient | undefined;
 }
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const prismaClientOptions = isProduction
+  ? { log: ['warn', 'error'] as ('warn' | 'error')[] }
+  : { log: ['error'] as 'error'[] };
+
 let prisma: PrismaClient;
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
-    datasources: {
-      db: {
-        url: process.env.DIRECT_URL,
-      },
-    },
-  });
+if (isProduction) {
+  prisma = new PrismaClient(prismaClientOptions);
 } else {
   if (!global.prisma) {
-    global.prisma = new PrismaClient({
-      log: ['error'],
-      datasources: {
-        db: {
-          url: process.env.DIRECT_URL,
-        },
-      },
-    });
+    global.prisma = new PrismaClient(prismaClientOptions);
   }
   prisma = global.prisma;
 }
-// @ts-ignore
-prisma.$on('query', (e) => {
+
+if (!isProduction) {
   // @ts-ignore
-  console.log('Query: ' + e.query);
-  // @ts-ignore
-  console.log('Params: ' + e.params);
-  // @ts-ignore
-  console.log('Duration: ' + e.duration + 'ms');
-});
+  prisma.$on('query', (e) => {
+    // @ts-ignore
+    console.log('Query: ' + e.query);
+    // @ts-ignore
+    console.log('Params: ' + e.params);
+    // @ts-ignore
+    console.log('Duration: ' + e.duration + 'ms');
+  });
+}
 
 export default prisma;

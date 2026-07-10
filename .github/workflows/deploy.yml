@@ -1,8 +1,9 @@
 name: Deploy to EC2
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    # Disabled automatic EC2 deploys — Vercel is the deployment target.
+    # Trigger manually from GitHub Actions if you need to deploy to EC2.
 
 env:
   AWS_REGION: us-west-1
